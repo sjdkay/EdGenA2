@@ -1,0 +1,31 @@
+nevt    2000000
+nprint  100000
+e-_lab  11.0    GeV
+tg_Z    1
+tg_N    1
+length  0.2     cm
+pro_x   0.01    cm
+pro_y   0.01    cm
+offset  0.0 0.0 0.0 cm
+model   1
+output  2
+npart   5
+pid     11 2212 113 211 -211
+ndecay  2
+decay   0 2 1 2 0.938 0.775
+dec_w   2 0.149
+dec_w   0 0.0
+decay   2 2 3 4 0.139 0.139
+dec_w   0 0.0
+dec_w   0 0.0
+
+#models
+# 1 Phase Space
+# 2 Cross Section
+# 3 Amplitudes
+# 4 Data Points
+
+# output
+# 1  ROOT only
+# 2  ROOT + LUND
+# 3  ROOT + BOS
