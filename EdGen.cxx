@@ -68,8 +68,8 @@ void Parse_Args(int *argc, char **argv) {
 
 
 void Print_Usage() {
-  printf (" heliosGen : This Program Generates events \n");  
-  printf (" Usage: heliosGen -i inputfile -o outputfile \n");  
+  printf (" EdGen : This Program Generates events \n");  
+  printf (" Usage: ./EdGen -i inputfile -o outputfile \n");  
   printf ("     -i (or -input) inputfile    input file name with correct flags (example input.dat)  \n");  
   printf ("     -o (or -output) outputfile output file name with correct flags (example output.root)  \n");  
   printf ("     -h (or -help) print this message \n");
