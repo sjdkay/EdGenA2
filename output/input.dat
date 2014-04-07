@@ -1,6 +1,8 @@
 nevt    20000
 nprint  1000
 e-_en	11.0    GeV
+tg_Z    1
+tg_N    1
 length	40	cm
 ras_x	0.2	cm
 ras_y	0.2	cm	

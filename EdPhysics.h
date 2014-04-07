@@ -24,7 +24,7 @@ class EdPhysics: public TGenPhaseSpace{
 	~EdPhysics();
 
 	void MakeEvent(EdOutput * , EdModel *);
-
+	enum nucl {kProton, kNeutron};
     private:
 
 	int n_part;

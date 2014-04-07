@@ -7,6 +7,8 @@ EdModel::EdModel(EdInput *inp){
 	length = inp->Get_length();
 	len_x = inp->Get_lenx();
 	len_y = inp->Get_leny();
+	tg_Z = inp->Get_tg_Z();
+	tg_N = inp->Get_tg_N();
 	energy = inp->Get_eEnergy();
 	theta_min = inp->Get_thetaMin();
 	theta_max = inp->Get_thetaMax();

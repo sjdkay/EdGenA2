@@ -17,6 +17,8 @@ class EdModel{
 	double GetLength() {return length; }
 	double GetLx() {return len_x; }
 	double GetLy() {return len_y; }
+	int    Get_tgZ() {return tg_Z; }
+	int    Get_tgN() {return tg_N; }
 	double GetEnergy() {return energy; }
 	double GetTheta_min() {return theta_min;}
 	double GetTheta_max() {return theta_max;}
@@ -34,6 +36,8 @@ class EdModel{
 	double length;
 	double len_x;
 	double len_y;
+	int    tg_Z;
+	int    tg_N;
 	double energy;
 	double theta_min;
 	double theta_max;

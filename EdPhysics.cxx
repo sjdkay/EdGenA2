@@ -73,7 +73,16 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
     double theta_min = model->GetTheta_min();
     double theta_max = model->GetTheta_max();
   
-    
+
+    nucl n;
+    double A = ((double) (model->Get_tgZ()+model->Get_tgN()));
+    double prot_prob = ((double) model->Get_tgZ())/A;
+    // Determine which type of nucleon we hit
+    if( fRandom->Uniform() < prot_prob ){
+	n = kProton;
+    } else {
+	n = kNeutron;
+    }    
 
     TLorentzVector *p4vector[n_part+1];
     //    for (int i=0; i<(n_part+1) ; i++) p4vector[i]->SetPxPyPzE(0.,0.,0.,0.);

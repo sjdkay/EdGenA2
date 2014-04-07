@@ -16,6 +16,8 @@ EdInput::EdInput(const char *file){
     fscanf(f, "%s%d", dummy, &fData.nevt);
     fscanf(f, "%s%d", dummy, &fData.nprnt);
     fscanf(f, "%s%lf%s", dummy, &fData.e_energy, dummy);
+    fscanf(f, "%s%i", dummy, &fData.tg_Z);
+    fscanf(f, "%s%i", dummy, &fData.tg_N);
     fscanf(f, "%s%lf%s", dummy, &fData.length, dummy);
     fscanf(f, "%s%lf%s", dummy, &fData.lenx, dummy);
     fscanf(f, "%s%lf%s", dummy, &fData.leny, dummy);

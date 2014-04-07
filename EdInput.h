@@ -24,6 +24,8 @@ struct inputdata {
     double theta_min;
     double theta_max;
 
+    int    tg_Z;
+    int    tg_N;
     double off_x;
     double off_y;
     double off_z;
@@ -49,6 +51,8 @@ class EdInput {
 	int    GetPid(int i){ return fData.pid[i]; }
 	double Get_eEnergy(){ return fData.e_energy; }
 	double Get_length(){ return fData.length; }
+	int    Get_tg_Z(){ return fData.tg_Z; }
+	int    Get_tg_N(){ return fData.tg_N; }
 	double Get_lenx(){ return fData.lenx; }
 	double Get_leny(){ return fData.leny; }
 	int    Get_fmt(){ return fData.out_fmt; }
