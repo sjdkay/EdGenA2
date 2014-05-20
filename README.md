@@ -3,7 +3,9 @@ EdGen Event Generator
 
 This code is for a common Event Generator for the HASPECT collaboration.
 It uses the ROOT (root.cern.ch) PhaseSpace generator has basis and 
-See http://www2.ph.ed.ac.uk/~lzana/Documents/zana_haspect_camogli2013.pdf for a quick presentation on this code.
+See http://www2.ph.ed.ac.uk/~lzana/Documents/zana_haspect_camogli2013.pdf 
+and http://wiki.ge.infn.it/haspect/index.php/AFEdGen 
+for a quick presentation on this code.
 
 Prerequisites
 -------------
