@@ -200,3 +200,75 @@ void  EdOutput::MakeFileLUND(){
 
 }
 
+
+void  EdOutput::MakeFileBOS(){
+
+
+  
+
+  TString file(fOutName);
+  file.ReplaceAll("root","bos"); 
+  int AutoOutputUnitNo = 12; // unit to open for writing (!?!?!?!? FORTRAN)
+  int maxFileLength = 2000000;  // Maximum length of the bos file (bos files can be maximum this size)
+  int nFileWrite = 0;
+
+  char out[100];
+  char mess[100];
+
+  Int_t nentries = (Int_t)fTree->GetEntries();
+  int tot_part = 0;
+  for (int j=0; j<n_part; j++) {
+    tot_part = tot_part +towrite[j];
+  }
+
+  double vxcm,vycm,vzcm;
+
+
+  printf("Output Bos file: %s\n",file.Data());
+  unlink(file.Data());
+  sprintf(out, "OPEN AUTOOUTPUT UNIT=%d FILE=\"%s\" WRITE STATUS=NEW RECL=32768", AutoOutputUnitNo, file.Data());
+  if (!fparm_c(out)) {
+    printf("Unable to open file \'%s\': %s\n\n",out,strerror(errno));
+    exit(1);
+  }
+
+  bankList(&bcs_, "C=","HEADMCTKMCVX");  // Write HEAD MCTK MCVX banks into the bos file
+
+
+
+
+  for (int i=0; i<nentries ; i++) {
+    fTree->GetEntry(i);
+    if(i % 1000000 == 0 ){
+      printf("Analyzed %09d events of total %09d \n",i,nentries);
+    }
+    
+    // Filling the array for bcs_ from the TTree
+
+
+    // Writing into bos file
+    putBOS(&bcs_, AutoOutputUnitNo, "T");
+
+    if (fileLength("AUTOOUTPUT") > maxFileLength) {
+      /*close file*/
+      putBOS(&bcs_, AutoOutputUnitNo, "0");
+      sprintf(mess,"CLOSE AUTOOUTPUT UNIT=%d", AutoOutputUnitNo);
+      fparm_c(mess);
+      sprintf(out,"_%d.bos",nFileWrite);
+      file.ReplaceAll(".bos",out);
+      nFileWrite++;
+      /* if -j option was present, issue PutFile command */
+      fprintf(stderr,"Output file: %s\n",file.Data());
+      unlink(file.Data());
+      sprintf(out, "OPEN AUTOOUTPUT UNIT=%d FILE=\"%s\" WRITE STATUS=NEW RECL=32768", AutoOutputUnitNo, outfile);
+      if (!fparm_c(out)) {
+	printf("Unable to open file \'%s\': %s\n\n",out,strerror(errno));
+	exit(1);
+      }
+    }
+
+
+
+  }
+
+}

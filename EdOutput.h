@@ -24,6 +24,7 @@ class EdOutput {
 	void Write();
 	void Close();
 	void MakeFileLUND();
+	void MakeFileBOS();
 	void SetTheta( double *, int);
 	void SetPhi(double *, int);
 	void SetEf(double *, int);
