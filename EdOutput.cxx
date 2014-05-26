@@ -231,6 +231,11 @@ void  EdOutput::MakeFileBOS(){
     printf("Unable to open file \'%s\': %s\n\n",out,strerror(errno));
     exit(1);
   }
+  //  bosInit( bcs_.iw, NBCS ); // bosio format
+  initbos(); // c_bos_io format
+  formatBank('HEAD','I');
+  formatBank('MCTK','(6F,5I)');
+  formatBank('MCVX','(4F,I)');
 
   bankList(&bcs_, "C=","HEADMCTKMCVX");  // Write HEAD MCTK MCVX banks into the bos file
 
@@ -244,10 +249,12 @@ void  EdOutput::MakeFileBOS(){
     }
     
     // Filling the array for bcs_ from the TTree
-
-
+    makeBank(&bcs_,"HEAD",0,8,1); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)
+    makeBank(&bcs_,"MCTK",1,11,(tot_part+1)); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)  
+    makeBank(&bcs_,"MCVX",2,5,1); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)
     // Writing into bos file
-    putBOS(&bcs_, AutoOutputUnitNo, "T");
+    
+    putBOS(&bcs_, AutoOutputUnitNo, "C");
 
     if (fileLength("AUTOOUTPUT") > maxFileLength) {
       /*close file*/

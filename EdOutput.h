@@ -16,6 +16,25 @@
 using namespace std; 
 
 
+//////////////////////////////////
+//    BOSIO Include Files ...
+//////////////////////////////////
+
+extern "C" {
+#define NBCS  700000
+#include "bosio.h"
+#include "bosfun.h"
+  typedef struct boscommon {
+    int junk[5];
+    int iw[NBCS];
+  } BOScommon;
+  //  BOScommon bcs_;
+  extern BOScommon bcs_;
+//   BOScommon fcs_;
+}
+#include "clasbanks.h"  // Include file for bankdef Library
+
+
 class EdOutput {
     public:
         EdOutput(EdInput *inp = 0, const char* fileout="output.root");
