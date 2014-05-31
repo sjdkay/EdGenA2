@@ -27,7 +27,7 @@ EdPhysics::EdPhysics(EdModel *model){
       towrite[i] = 1;
       particle_id[i] = model->GetPid(i);
       part_pdg[i] = pdg->GetParticle(particle_id[i]); 
-      charge[i] = part_pdg[i]->Charge();
+      charge[i] = part_pdg[i]->Charge()/3; // Charge is in unit of |e|/3
       masses2[i] = part_pdg[i]->Mass();
       printf("Particle n.%i \t pid=%i \t mass=%.3e GeV \n",i+1,particle_id[i],masses2[i]);
     }
