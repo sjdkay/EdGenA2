@@ -107,6 +107,16 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
       weight2 = Generate();
       for (int j=0; j<npvert[i]; j++) {
 	p4vector[atpart] = GetDecay(j);
+	//	cout << "Particle n." << atpart << " Mass=" << p4vector[atpart]->M() << endl; 
+	theta[atpart] = p4vector[atpart]->Theta();
+	phi[atpart] = p4vector[atpart]->Phi();
+	Ef[atpart] = p4vector[atpart]->E();
+	pf[atpart] = p4vector[atpart]->Rho();
+	px[atpart] = p4vector[atpart]->Px();
+	py[atpart] = p4vector[atpart]->Py();
+	pz[atpart] = p4vector[atpart]->Pz();
+	if (atpart<npvert[0] && atpart>0) W4vector += *p4vector[atpart]; // I am assuming that the first particle is the scattered beam
+	if (atpart == 0)      Q4vector= beam - *p4vector[0];
 	weight[atpart] = weight2;
 	if (overt[i] ==0) {
 	  vx[atpart] = vertex.X();
@@ -134,18 +144,6 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
       } 
     }
     
-     for (int p=0; p<n_part; p++) {
-      theta[p] = p4vector[p]->Theta();
-      phi[p] = p4vector[p]->Phi();
-      Ef[p] = p4vector[p]->E();
-      pf[p] = p4vector[p]->Rho();
-      px[p] = p4vector[p]->Px();
-      py[p] = p4vector[p]->Py();
-      pz[p] = p4vector[p]->Pz();
-      
-      if (p<npvert[0] && p>0) W4vector += *p4vector[p]; // I am assuming that the first particle is the scattered beam
-    }
-     Q4vector= beam - *p4vector[0];
 
      out->SetTheta(theta,n_part);
      out->SetPhi(phi,n_part);
@@ -169,10 +167,6 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
     nu= Q4vector.Dot(target)/target.M(); 
     x = Q2/(2*target.M()*nu);
     y = Q4vector.Dot(target)/beam.Dot(target);
-    // vx = vertex.X();
-    // vy = vertex.Y();
-    // vz = vertex.Z();
-    // printf("%f",weight);
 
     out->SetZ_ion(Z_ion);
     out->SetN_ion(N_ion);

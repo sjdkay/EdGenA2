@@ -220,62 +220,70 @@ void  EdOutput::MakeFileBOS(){
   int maxFileLength = 2000000;  // Maximum length of the bos file (bos files can be maximum this size)
   int nFileWrite = 0;
   int icode;
-
-  // char out[100];
+  int mctk_array_n;
   char mess[1024];
 
   Int_t nentries = (Int_t)fTree->GetEntries();
-  int tot_part = 0;
-  for (int j=0; j<n_part; j++) {
-     tot_part = tot_part +towrite[j];
-  }
-
-  // double vxcm,vycm,vzcm;
-
+  int tot_part;
 
   printf("Output Bos file: %s\n",file.Data());
-  //  unlink(file.Data());
-  char namefile[100];
-  sprintf(namefile,"%s",file.Data());
-  printf("Output Bos file: %s\n",namefile);
+
   sprintf(mess," OPEN BOSOUTPUT UNIT=%3d FILE=\"%s\" WRITE STATUS=NEW RECL=32760 SPLITMB=2047 FORM=BINARY", BosOutputUnitNo,file.Data());
   fparm_c(mess);
-  //  open_fpack_unit(namefile,"BOSOUTPUT",BosOutputUnitNo);
-  // sprintf(out, "OPEN BOSOUTPUT UNIT=%d FILE=\"%s\" WRITE STATUS=NEW RECL=32768", BosOutputUnitNo, file.Data());
-  // if (!fparm_c(out)) {
-  //   printf("Unable to open file \'%s\': %s\n\n",out,strerror(errno));
-  //   exit(1);
-  // }
-  // //  bosInit( bcs_.iw, NBCS ); // bosio format
   initbos(); // c_bos_io format
-  //formatBank('HEAD','I');
-  // formatBank('MCTK','(6F,5I)');
-  // formatBank('MCVX','(4F,I)');
 
   bankList(&bcs_, "C=","HEADMCTKMCVX");  // Write HEAD MCTK MCVX banks into the bos file
-
-
-
 
    for (int i=0; i<nentries ; i++) {
     fTree->GetEntry(i);
     if(i % 1000000 == 0 ){
        printf("Analyzed %09d events of total %09d \n",i,nentries);
      }
-    
+    tot_part = 0;
+    // will need to modify the output array in order to take care that some particle can be in the final state or not
+    for (int j=0; j<n_part; j++) {
+      tot_part = tot_part +towrite[j];
+    }
+
     //   // Filling the array for bcs_ from the TTree
     HEAD = (clasHEAD_t *) makeBank(&bcs_,"HEAD",0,8,1); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)
-    MCTK = (clasMCTK_t *) makeBank(&bcs_,"MCTK",1,11,(tot_part+1)); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)  
+    MCTK = (clasMCTK_t *) makeBank(&bcs_,"MCTK",1,11,tot_part); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)  
     MCVX = (clasMCVX_t *) makeBank(&bcs_,"MCVX",2,5,1); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)
     
     h.version = 0;
     h.nrun = 10; // gsim run
     h.nevent = i+1; // number of event
     h.time = time(NULL); // time in seconds since Jan 1, 1970
-    h.type = 2;
+    h.type = -3;
     h.roc = 0;
     h.evtclass = 7;
-    
+    mctk_array_n = 0;
+
+    MCVX->mcvx[0].x =vx[0]*100.0;
+    MCVX->mcvx[0].y =vy[0]*100.0;
+    MCVX->mcvx[0].z =vz[0]*100.0;
+ 
+
+    for (int j=0; j<n_part; j++) {
+      if (towrite[j] == 1) {
+
+	
+	MCTK->mctk[mctk_array_n].id = particle_id[j];
+	MCTK->mctk[mctk_array_n].cx = px[j]/pf[j];
+	MCTK->mctk[mctk_array_n].cy = py[j]/pf[j];
+	MCTK->mctk[mctk_array_n].cz = pz[j]/pf[j];
+	MCTK->mctk[mctk_array_n].pmom = pf[j];
+	MCTK->mctk[mctk_array_n].mass = pow( (pow(Ef[j],2)-pow(pf[j],2)) ,0.5) ;
+	MCTK->mctk[mctk_array_n].charge = charge[j];
+	MCTK->mctk[mctk_array_n].beg_vtx = 1;
+	MCTK->mctk[mctk_array_n].end_vtx = 0;
+	MCTK->mctk[mctk_array_n].parent = 1;
+	MCTK->mctk[mctk_array_n].flag = 0;
+	mctk_array_n++;
+	// One can still declare better the beg_vtx, end_vtx, parent
+	
+      }
+    }
 
 
    // Writing into bos file
@@ -288,23 +296,6 @@ void  EdOutput::MakeFileBOS(){
     dropAllBanks(&bcs_,"C");
     cleanBanks(&bcs_);
 
-  //   if (fileLength("BOSOUTPUT") > maxFileLength) {
-  //     /*close file*/
-  //     putBOS(&bcs_, BosOutputUnitNo, "0");
-  //     sprintf(mess,"CLOSE BOSOUTPUT UNIT=%d", BosOutputUnitNo);
-  //     fparm_c(mess);
-  //     sprintf(out,"_%d.bos",nFileWrite);
-  //     file.ReplaceAll(".bos",out);
-  //     nFileWrite++;
-  //     /* if -j option was present, issue PutFile command */
-  //     fprintf(stderr,"Output file: %s\n",file.Data());
-  //     unlink(file.Data());
-  //     sprintf(out, "OPEN BOSOUTPUT UNIT=%d FILE=\"%s\" WRITE STATUS=NEW RECL=32768", BosOutputUnitNo, outfile);
-  //     if (!fparm_c(out)) {
-  // 	printf("Unable to open file \'%s\': %s\n\n",out,strerror(errno));
-  // 	exit(1);
-  //     }
-  //   }
    }
    close_fpack_unit("BOSOUTPUT");
 
