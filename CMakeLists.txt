@@ -22,9 +22,9 @@ set(useROOT true)        # use true or false
 #
 include(FindROOT.cmake)
 #include(${Geant4_USE_FILE})
-include_directories(${PROJECT_SOURCE_DIR} ${ROOT_INCLUDE_DIR} )
+include_directories(${PROJECT_SOURCE_DIR} ${ROOT_INCLUDE_DIR} /group/clas/builds/include/ )
 set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}
+${ROOT_LIBRARY_DIR} /group/clas/builds/lib/ /usr/lib64/cernlib/2006/lib/
 )
 
 link_directories( ${LINK_DIRECTORIES})
@@ -41,7 +41,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/*.h)
 #
 add_executable(EdGen ${sources} ${headers})
 set(LINK_LIBRARIES
-  ${ROOT_LIBRARIES} 
+  ${ROOT_LIBRARIES} -lThread -lHtml -lGed -lEG -lGeom -lc_bos_io -lbankdefs -lbosio -lpacklib
 )
 target_link_libraries(EdGen ${LINK_LIBRARIES})
 

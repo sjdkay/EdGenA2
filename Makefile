@@ -6,6 +6,7 @@ EDGENS  := $(wildcard *.$(SrcSuf))
 EDGENH  := $(wildcard *.h)
 EDGENO  := $(EDGENS:.$(SrcSuf)=.$(ObjSuf)) 
 EDGEN    = EdGen$(ExeSuf)
+CLASLIBS = -lc_bos_io
 
 OBJS          = $(EDGENO)
 
@@ -22,13 +23,13 @@ all:            $(PROGRAMS)
 
 $(EDGEN):  $(EDGENO)
 		@echo "this: $@, $(EDGENO)"
-		$(LD) $(LDFLAGS) $^ $(GLIBS) -ggdb -O2 -lEG -lGed -lHtml -lThread -lGeom  $(OutPutOpt)$@
+		$(LD) $(LDFLAGS) $^ $(GLIBS) -I$(CLAS6INC) -L$(CLAS6LIB) -ggdb -O2 -lEG -lGed -lHtml -lThread -lGeom $(CLASLIBS) $(OutPutOpt)$@
 		cp EdGen output/
 		@echo "$@ done"
 
 EdGen.$(SrcSuf): 
 		@echo "Generating dictionary $@..."
-		@rootcint -f $@ -c $^
+		@rootcint -I$(CLAS6INC) -L$(CLAS6LIB)  -f $@ -c $^
 
 
 clean:

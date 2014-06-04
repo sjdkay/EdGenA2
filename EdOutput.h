@@ -12,28 +12,27 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+
+
+#include <stdlib.h>
+#include <errno.h>
+#include <ntypes.h>
+#include <math.h>
+#include <sys/types.h>
+#include <time.h>
+extern "C" {
+#include <bostypes.h>
+}
+
+
+
 #define MAX_PART 10
 using namespace std; 
 
 
-//////////////////////////////////
-//    BOSIO Include Files ...
-//////////////////////////////////
-
-/* extern "C" { */
-/* #define NBCS  700000 */
-/* #include "bosio.h" */
-/* #include "bosfun.h" */
-/*   typedef struct boscommon { */
-/*     int junk[5]; */
-/*     int iw[NBCS]; */
-/*   } BOScommon; */
-/*   //  BOScommon bcs_; */
-/*   extern BOScommon bcs_; */
-/* //   BOScommon fcs_; */
-/* } */
-/* #include "clasbanks.h"  // Include file for bankdef Library */
-
+extern"C" {
+  void close_fpack_unit(char *dataname);
+}
 
 class EdOutput {
     public:
