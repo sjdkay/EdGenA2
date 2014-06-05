@@ -4,24 +4,8 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(EdGen)
 set(useROOT true)        # use true or false
-#----------------------------------------------------------------------------
-# Find Geant4 package, activating all available UI and Vis drivers by default
-# You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
-# to build a batch mode only executable
-#
-#option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
-#if(WITH_GEANT4_UIVIS)
-#  find_package(Geant4 REQUIRED ui_all vis_all gdml)
-#else()
-#  find_package(Geant4 REQUIRED gdml)
-#endif()
-
-#----------------------------------------------------------------------------
-# Setup Geant4 include directories and compile definitions
-# Setup include directory for this project
-#
 include(FindROOT.cmake)
-#include(${Geant4_USE_FILE})
+
 set(WITHBOS $ENV{CLAS6LIB})
 if(WITHBOS)
 	include_directories(${PROJECT_SOURCE_DIR} ${ROOT_INCLUDE_DIR} $ENV{CLAS6INC})
