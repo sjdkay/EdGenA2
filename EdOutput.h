@@ -1,6 +1,10 @@
 #ifndef __EdOutput_h
 #define __EdOutput_h
 
+// UNCOMMENT THE FOLLOWING LINES IF YOU WANT TO HAVE BOS OUTPUT
+//#define CLAS6LIB
+//
+
 #include "EdInput.h"
 
 
