@@ -206,12 +206,12 @@ void  EdOutput::MakeFileLUND(){
 
 void  EdOutput::MakeFileBOS(){
 
-
+#ifdef CLAS6LIB
 #define h HEAD->head[0]
-
+#endif
   TString file(fOutName);
   file.ReplaceAll("root","bos"); 
-  
+#ifdef CLAS6LIB  
   clasHEAD_t *HEAD;
   clasMCTK_t *MCTK;
   clasMCVX_t *MCVX;
@@ -298,6 +298,6 @@ void  EdOutput::MakeFileBOS(){
 
    }
    close_fpack_unit("BOSOUTPUT");
-
+#endif
 }
 

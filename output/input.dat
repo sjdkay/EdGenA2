@@ -15,7 +15,7 @@ vertex  0 3
 v_type  1 1.0
 vertex  3 2
 v_type  1 1.0
-output  3
+output  2
 
 
 # output

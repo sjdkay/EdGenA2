@@ -16,24 +16,26 @@
 
 #include <stdlib.h>
 #include <errno.h>
+#ifdef CLAS6LIB
 #include <ntypes.h>
-#include <math.h>
 #include <sys/types.h>
-#include <time.h>
 extern "C" {
 #include <bostypes.h>
 }
+#endif 
+#include <math.h>
+#include <time.h>
 
 
 
 #define MAX_PART 10
 using namespace std; 
 
-
+#ifdef CLAS6LIB
 extern"C" {
   void close_fpack_unit(char *dataname);
 }
-
+#endif
 class EdOutput {
     public:
         EdOutput(EdInput *inp = 0, const char* fileout="output.root");
