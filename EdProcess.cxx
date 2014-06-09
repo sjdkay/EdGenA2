@@ -21,6 +21,7 @@ void EdProcess::Run(){
     TString fmtst[3];    
     fmtst[0] = "ROOT";
     fmtst[1] = "ROOT and LUND";
+    fmtst[2] = "ROOT and BOS";
     int fmt = finp->Get_fmt();
  
     for( evt = 0; evt < nevt; evt++ ){
@@ -30,6 +31,10 @@ void EdProcess::Run(){
     if (fmt == 2 ) { // also LUND format 
       printf("Creating LUND output \n") ;
       fout->MakeFileLUND();
+    }
+    if (fmt == 3 ) { // also LUND format 
+      printf("Creating BOS output \n") ;
+      fout->MakeFileBOS();
     }
 
 
