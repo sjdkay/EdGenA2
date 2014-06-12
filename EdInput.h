@@ -7,6 +7,7 @@
 struct inputdata {
     int    nevt;
     int    nprnt;
+    int    model;
     int    npart; // total number of particles involved
     int    nvertex; // total number of vertexes
     int    npvert[10]; // total number of particle at one vertex

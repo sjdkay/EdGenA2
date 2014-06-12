@@ -1,20 +1,49 @@
 #include "EdInput.h"
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include "TString.h"
 
 EdInput::EdInput(const char *file){
     printf("Reading %s for input\n", file);
 
+    char command[100];
     ifstream inputfile;
     inputfile.open(file, ifstream::in);
     if( !inputfile ) {
-      cerr << "Error opening input stream" << endl;
-      return;
+      printf("%s cannot be opened\n", file); 
+      exit(1);
     }
     char c1;
+    char delim = ';';
+    TString valcommand;
+    
     while( !inputfile.eof() ){
       c1 = inputfile.peek(); // read the first character , if it is a #, skip the line
-
+      if (c1!='#') {
+	inputfile.getline(command,100,delim);
+	// printf("read command %s\n",command);
+	valcommand = command;
+	if (valcommand.Contains("nevt")) {
+	  valcommand.ReplaceAll("nevt:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.nevt = valcommand.Atoi();
+	  printf("Total Number of events %d\n",fData.nevt);
+	}
+	if (valcommand.Contains("nprint")) {
+	  valcommand.ReplaceAll("nprint:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.nprnt = valcommand.Atoi();
+	}
+	if (valcommand.Contains("model")) {
+	  valcommand.ReplaceAll("model:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.model = valcommand.Atoi();
+	}
+      }
     }
     // FILE *f = fopen(file, "r");
 
