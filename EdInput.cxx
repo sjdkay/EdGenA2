@@ -17,6 +17,8 @@ EdInput::EdInput(const char *file){
     char c1;
     char delim = ';';
     TString valcommand;
+    TString valc2;
+    double factor;
     
     while( !inputfile.eof() ){
       c1 = inputfile.peek(); // read the first character , if it is a #, skip the line
@@ -43,6 +45,78 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll(" ","");
 	  fData.model = valcommand.Atoi();
 	}
+	if (valcommand.Contains("beam")) {
+	  valcommand.ReplaceAll("beam:","");
+	  valcommand.ReplaceAll(";","");
+	  if (valcommand.Contains("MeV")) factor = 0.001;
+	  else factor = 1;
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("GeV","");
+	  valcommand.ReplaceAll("MeV","");
+	  fData.e_energy = factor*valcommand.Atof();
+	}
+	if (valcommand.Contains("tg_Z")) {
+	  valcommand.ReplaceAll("tg_Z:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.tg_Z = valcommand.Atoi();
+	}
+	if (valcommand.Contains("tg_N")) {
+	  valcommand.ReplaceAll("tg_N:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.tg_N = valcommand.Atoi();
+	}
+	if (valcommand.Contains("length")) {
+	  valcommand.ReplaceAll("length:","");
+	  valcommand.ReplaceAll(";","");
+	  if (valcommand.Contains(" m")) factor = 0.01;
+	  else factor = 1;
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" m","");
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("cm","");
+	  fData.length = factor*valcommand.Atof();
+	}
+	if (valcommand.Contains("ras_x")) {
+	  valcommand.ReplaceAll("ras_x:","");
+	  valcommand.ReplaceAll(";","");
+	  if (valcommand.Contains(" m")) factor = 0.01;
+	  else factor = 1;
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" m","");
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("cm","");
+	  fData.lenx = factor*valcommand.Atof();
+	}
+	if (valcommand.Contains("ran_y")) {
+	  valcommand.ReplaceAll("ran_y:","");
+	  valcommand.ReplaceAll(";","");
+	  if (valcommand.Contains(" m")) factor = 0.01;
+	  else factor = 1;
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" m","");
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("cm","");
+	  fData.leny = factor*valcommand.Atof();
+	}
+	if (valcommand.Contains("theta")) {
+	  valcommand.ReplaceAll("theta:","");
+	  valcommand.ReplaceAll(";","");
+	  if (valcommand.Contains(" deg")) factor = 3.14/180;
+	  else factor = 1; //rad
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll("deg","");
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("rad","");
+	  valc2 = valcommand(0,valcommand.First(",")-1);
+	  fData.theta_min = factor*valc2.Atof();
+	  valc2 = valcommand(valcommand.First(",")+1,valcommand.Length());
+	  fData.theta_max = factor*valc2.Atof();
+	  printf("Theta_min=%.2f ;  Theta_max=%.2f\n",fData.theta_min,fData.theta_max);
+	}
+
       }
     }
     // FILE *f = fopen(file, "r");
