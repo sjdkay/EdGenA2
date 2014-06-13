@@ -19,6 +19,8 @@ EdInput::EdInput(const char *file){
     TString valcommand;
     TString valc2;
     double factor;
+    int poscomma;
+    int atvertex = 0;
     
     while( !inputfile.eof() ){
       c1 = inputfile.peek(); // read the first character , if it is a #, skip the line
@@ -116,9 +118,85 @@ EdInput::EdInput(const char *file){
 	  fData.theta_max = factor*valc2.Atof();
 	  printf("Theta_min=%.2f ;  Theta_max=%.2f\n",fData.theta_min,fData.theta_max);
 	}
-
+	if (valcommand.Contains("offset")) {
+	  valcommand.ReplaceAll("offset:","");
+	  valcommand.ReplaceAll(";","");
+	  if (valcommand.Contains(" m")) factor = 0.01;
+	  else factor = 1; //rad
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" m","");
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("cm","");
+	  valc2 = valcommand(0,valcommand.First(",")-1);
+	  fData.off_x = factor*valc2.Atof();
+	  valcommand.Replace(0,valc2.Length()+1,"");
+	  valc2 = valcommand(0,valcommand.First(",")-1);
+	  fData.off_y = factor*valc2.Atof();
+	  valcommand.Replace(0,valc2.Length()+1,"");
+	  fData.off_z = factor*valcommand.Atof();
+	  printf("Offset_X=%.2f ;  Offset_Y=%.2f ; Offset_Z=%.2f\n",fData.off_x,fData.off_y,fData.off_z);
+	}
+	if (valcommand.Contains("npart")) {
+	  valcommand.ReplaceAll("npart:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.npart = valcommand.Atoi();
+	}
+	if (valcommand.Contains("pid")) {
+	  valcommand.ReplaceAll("pid:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  for (int i=0; i<fData.npart -1; i++) {
+	    poscomma = valcommand.First(",");
+	    valc2 = valcommand(0,poscomma-1);
+	    fData.pid[i] = valc2.Atoi();
+	    valcommand.Replace(0,poscomma,"");
+	  }
+	  fData.pid[fData.npart -1] = valcommand.Atoi();
+	}
+	if (valcommand.Contains("nvertex")) {
+	  valcommand.ReplaceAll("nvertex:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.nvertex = valcommand.Atoi();
+	}
+	if (valcommand.Contains("vertex")) {
+	  valcommand.ReplaceAll("vertex:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  valc2 = valcommand(0,valcommand.First(",")-1);
+	  fData.overt[atvertex] = valc2.Atoi();
+	  valc2 = valcommand(valcommand.First(",")+1,valcommand.Length());
+	  fData.npvert[atvertex] = valc2.Atoi();
+	}
+	if (valcommand.Contains("v_type")) {
+	  valcommand.ReplaceAll("v_type:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  valc2 = valcommand(0,valcommand.First(",")-1);
+	  fData.v_type[atvertex] = valc2.Atoi();
+	  printf("%s",valc2.Data());
+	  valc2 = valcommand(valcommand.First(",")+1,valcommand.Length());
+	  fData.v_ratio[atvertex] = valc2.Atof();
+	  printf("Vertex type=%i , Vertex ratio=%.2f \n",fData.v_type[atvertex],fData.v_ratio[atvertex]);
+	  if (fData.v_type[atvertex] != 1) {
+	    printf("vertex n. %i type not supported \n",atvertex+1);
+	    exit(1);
+	  }
+	  atvertex++;
+	}
+	if (valcommand.Contains("output")) {
+	  valcommand.ReplaceAll("output:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.out_fmt = valcommand.Atoi();
+	}
+	
       }
     }
+    if (atvertex!=fData.npart) printf("Number of reqeusted vertexes is %i, but format written for just %i vertexes",fData.npart, atvertex);
+
+
     // FILE *f = fopen(file, "r");
 
     // if( !f ){ printf("%s cannot be opened\n", file); exit(1); }
