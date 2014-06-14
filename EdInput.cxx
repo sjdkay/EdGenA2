@@ -40,12 +40,14 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
 	  fData.nprnt = valcommand.Atoi();
+	  printf("Print feedback every %d events\n",fData.nprnt);
 	}
 	if (valcommand.Contains("model")) {
 	  valcommand.ReplaceAll("model:","");
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
 	  fData.model = valcommand.Atoi();
+	  printf("Model for the generator %d\n",fData.model);
 	}
 	if (valcommand.Contains("beam")) {
 	  valcommand.ReplaceAll("beam:","");
@@ -57,6 +59,7 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll("GeV","");
 	  valcommand.ReplaceAll("MeV","");
 	  fData.e_energy = factor*valcommand.Atof();
+	  printf("Beam energy of %.4f\n",fData.e_energy);
 	}
 	if (valcommand.Contains("tg_Z")) {
 	  valcommand.ReplaceAll("tg_Z:","");
