@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <cstdlib>
 #include "TString.h"
 
 EdInput::EdInput(const char *file){
@@ -28,6 +29,7 @@ EdInput::EdInput(const char *file){
 	inputfile.getline(command,100,delim);
 	// printf("read command %s\n",command);
 	valcommand = command;
+	printf("%s \n",valcommand.Data());
 	if (valcommand.Contains("nevt")) {
 	  valcommand.ReplaceAll("nevt:","");
 	  valcommand.ReplaceAll(";","");
@@ -66,12 +68,14 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
 	  fData.tg_Z = valcommand.Atoi();
+	  printf("Target Z: %d\n",fData.tg_Z);
 	}
 	if (valcommand.Contains("tg_N")) {
 	  valcommand.ReplaceAll("tg_N:","");
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
 	  fData.tg_N = valcommand.Atoi();
+	  printf("Target N: %d\n",fData.tg_N);
 	}
 	if (valcommand.Contains("length")) {
 	  valcommand.ReplaceAll("length:","");
@@ -83,6 +87,7 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll(" ","");
 	  valcommand.ReplaceAll("cm","");
 	  fData.length = factor*valcommand.Atof();
+	  printf("Target length: %.4f cm\n",fData.length);	  
 	}
 	if (valcommand.Contains("ras_x")) {
 	  valcommand.ReplaceAll("ras_x:","");
@@ -94,6 +99,7 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll(" ","");
 	  valcommand.ReplaceAll("cm","");
 	  fData.lenx = factor*valcommand.Atof();
+	  printf("Raster X: %.4f cm\n",fData.lenx);	  
 	}
 	if (valcommand.Contains("ran_y")) {
 	  valcommand.ReplaceAll("ran_y:","");
@@ -105,6 +111,7 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll(" ","");
 	  valcommand.ReplaceAll("cm","");
 	  fData.leny = factor*valcommand.Atof();
+	  printf("Raster Y: %.4f cm\n",fData.leny);	  
 	}
 	if (valcommand.Contains("theta")) {
 	  valcommand.ReplaceAll("theta:","");
@@ -115,11 +122,11 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll("deg","");
 	  valcommand.ReplaceAll(" ","");
 	  valcommand.ReplaceAll("rad","");
-	  valc2 = valcommand(0,valcommand.First(",")-1);
+	  valc2 = valcommand(0,valcommand.First(","));
 	  fData.theta_min = factor*valc2.Atof();
 	  valc2 = valcommand(valcommand.First(",")+1,valcommand.Length());
 	  fData.theta_max = factor*valc2.Atof();
-	  printf("Theta_min=%.2f ;  Theta_max=%.2f\n",fData.theta_min,fData.theta_max);
+	  printf("Theta_min=%.2f ;  Theta_max=%.2f\n",fData.theta_min,fData.theta_max);	  
 	}
 	if (valcommand.Contains("offset")) {
 	  valcommand.ReplaceAll("offset:","");
@@ -144,39 +151,46 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
 	  fData.npart = valcommand.Atoi();
+	  printf("Number of particle in final state: %d\n",fData.npart);
 	}
 	if (valcommand.Contains("pid")) {
 	  valcommand.ReplaceAll("pid:","");
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
+	  printf("Particle ID for final states particles: ");
 	  for (int i=0; i<fData.npart -1; i++) {
 	    poscomma = valcommand.First(",");
 	    valc2 = valcommand(0,poscomma-1);
 	    fData.pid[i] = valc2.Atoi();
 	    valcommand.Replace(0,poscomma,"");
+	    printf(" %d",fData.pid[i]);
 	  }
 	  fData.pid[fData.npart -1] = valcommand.Atoi();
+	   printf(" %d \n",fData.pid[fData.npart -1]);
 	}
 	if (valcommand.Contains("nvertex")) {
 	  valcommand.ReplaceAll("nvertex:","");
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
 	  fData.nvertex = valcommand.Atoi();
+	  printf("Number of vertexes: %d\n",fData.nvertex);
 	}
 	if (valcommand.Contains("vertex")) {
 	  valcommand.ReplaceAll("vertex:","");
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
-	  valc2 = valcommand(0,valcommand.First(",")-1);
+	  valc2 = valcommand(0,valcommand.First(","));
 	  fData.overt[atvertex] = valc2.Atoi();
 	  valc2 = valcommand(valcommand.First(",")+1,valcommand.Length());
 	  fData.npvert[atvertex] = valc2.Atoi();
+	  printf("Origin vertex particle n.: %d    Number of particles at this vertex: %d \n",fData.overt[atvertex],fData.npvert[atvertex]);
+	  
 	}
 	if (valcommand.Contains("v_type")) {
 	  valcommand.ReplaceAll("v_type:","");
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
-	  valc2 = valcommand(0,valcommand.First(",")-1);
+	  valc2 = valcommand(0,valcommand.First(","));
 	  fData.v_type[atvertex] = valc2.Atoi();
 	  printf("%s",valc2.Data());
 	  valc2 = valcommand(valcommand.First(",")+1,valcommand.Length());
@@ -193,8 +207,10 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" ","");
 	  fData.out_fmt = valcommand.Atoi();
+	  printf("Output format n.: %d\n",fData.out_fmt);
+	  exit(1);
 	}
-	
+
       }
     }
     if (atvertex!=fData.npart) printf("Number of reqeusted vertexes is %i, but format written for just %i vertexes",fData.npart, atvertex);
