@@ -17,6 +17,7 @@ struct inputdata {
     double v_ratio[10]; // ration to be applied to vertex
 
     int    pid[100];
+    int    beam_pid;
     double e_energy;
     double length;
     double lenx;
@@ -43,6 +44,8 @@ class EdInput {
 	int    GetNevt(){ return fData.nevt; }
 	int    GetNprnt(){ return fData.nprnt; }
 	int    GetNpart(){ return fData.npart; }
+	int    GetModel(){ return fData.model; }
+	int    GetBeamPID(){ return fData.beam_pid; }
 	int    GetNvertex(){ return fData.nvertex; }
 	int    GetOvert(int i){ return fData.overt[i]; }
 	int    GetNpvert(int i){ return fData.npvert[i]; }

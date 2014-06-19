@@ -1,6 +1,6 @@
 nevt:    20000;
 nprint:  1000;
-model:   1;
+model:   2;
 beam:    11;
 en:	 11.0    GeV;
 tg_Z:    1;

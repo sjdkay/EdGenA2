@@ -56,6 +56,13 @@ EdInput::EdInput(const char *file){
 	if (valcommand.Contains("beam:")) {
 	  valcommand.ReplaceAll("beam:","");
 	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.beam_pid = valcommand.Atoi();
+	  printf("Beam Particle PID=%d\n",fData.beam_pid);
+	}
+	if (valcommand.Contains("en:")) {
+	  valcommand.ReplaceAll("en:","");
+	  valcommand.ReplaceAll(";","");
 	  if (valcommand.Contains("MeV")) factor = 0.001;
 	  else factor = 1;
 	  valcommand.ReplaceAll(";","");
