@@ -4,6 +4,7 @@ EdModel::EdModel(EdInput *inp){
 
     if( inp ){
       int tot_part = 100;
+      ifile = inp->GetIfile();
 	length = inp->Get_length();
 	len_x = inp->Get_lenx();
 	len_y = inp->Get_leny();
@@ -15,8 +16,8 @@ EdModel::EdModel(EdInput *inp){
 	  Input_spectrum->Branch("Energy_1",&Energy_1,"Energy_1/F");
 	  Input_spectrum->Branch("Energy_2",&Energy_2,"Energy_2/F");
 	  Input_spectrum->Branch("E_counts",&E_counts,"E_counts/F");
-	  printf("Reading input file \n");
-	  Input_spectrum->ReadFile("energy.txt", "Energy_1:Energy_2:E_counts");
+	  printf("Reading input file %s\n",ifile.Data());
+	  Input_spectrum->ReadFile(ifile.Data(), "Energy_1:Energy_2:E_counts");
 	  H1_spec = new TH1F("H1_spec","H1_spec",Input_spectrum->GetEntries(),Input_spectrum->GetMinimum("Energy_1"),Input_spectrum->GetMaximum("Energy_2"));
 	  Axis_t *new_bins = new Axis_t[Input_spectrum->GetEntries() + 1];	    
 	  TAxis *axis = H1_spec->GetXaxis(); 

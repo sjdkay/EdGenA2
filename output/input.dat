@@ -1,6 +1,7 @@
 nevt:    20000;
 nprint:  1000;
 model:   2;
+ifile:	 energy.txt; 
 beam:    11;
 en:	 11.0    GeV;
 tg_Z:    1;

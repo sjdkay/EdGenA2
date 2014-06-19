@@ -26,6 +26,7 @@ class EdModel{
 	double GetBeamPID() {return beam_pid;}
 	double GetTheta_min() {return theta_min;}
 	double GetTheta_max() {return theta_max;}
+	//	char* GetInFileName() {return ifile.data()};
 	int    GetNpart() {return npart;}
 	int    GetPhModel() {return ph_model;}
 	TVector3 GetTgtOffset(){ return offset; }
@@ -44,6 +45,7 @@ class EdModel{
 	int    tg_Z;
 	int    tg_N;
 	int    ph_model;
+	TString ifile;
 	double energy;
 	int    beam_pid;
 	double theta_min;

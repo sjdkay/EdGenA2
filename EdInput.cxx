@@ -53,6 +53,15 @@ EdInput::EdInput(const char *file){
 	  fData.model = valcommand.Atoi();
 	  printf("Model for the generator %d\n",fData.model);
 	}
+	if (valcommand.Contains("ifile:")) {
+	  valcommand.ReplaceAll("ifile:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("\n","");
+	  valcommand.ReplaceAll("\t","");
+	  fData.ifile = valcommand.Strip();
+	  printf("Input file spectra from %s\n",fData.ifile.Data());
+	}
 	if (valcommand.Contains("beam:")) {
 	  valcommand.ReplaceAll("beam:","");
 	  valcommand.ReplaceAll(";","");
@@ -110,8 +119,8 @@ EdInput::EdInput(const char *file){
 	  fData.lenx = factor*valcommand.Atof();
 	  printf("Raster X: %.4f cm\n",fData.lenx);	  
 	}
-	if (valcommand.Contains("ran_y:")) {
-	  valcommand.ReplaceAll("ran_y:","");
+	if (valcommand.Contains("ras_y:")) {
+	  valcommand.ReplaceAll("ras_y:","");
 	  valcommand.ReplaceAll(";","");
 	  if (valcommand.Contains(" m")) factor = 0.01;
 	  else factor = 1;
