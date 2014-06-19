@@ -2,7 +2,7 @@ nevt:    20000;
 nprint:  1000;
 model:   2;
 ifile:	 energy.txt; 
-beam:    11;
+beam:    22;
 en:	 11.0    GeV;
 tg_Z:    1;
 tg_N:    1;
