@@ -16,12 +16,11 @@ EdPhysics::EdPhysics(EdModel *model){
     pdg->ReadPDGTable("eg_pdg_table.txt");
     fRandom = new TRandom2(0);
     printf("Seed number %d\n",fRandom->GetSeed());
-    double e_lab = model->GetEnergy();
     target.SetPxPyPzE(0.0, 0.0, 0.0, 0.938); // target H2
-    beam.SetPxPyPzE(0.0, 0.0,e_lab,e_lab);
  
     n_part = model->GetNpart();
     nvertex = model->GetNvertex();
+    part_pdg[n_part] = pdg->GetParticle(model->GetBeamPID()); // Beam particle stored in part_pdg[n_part]
     double masses2[n_part];
     for (int i=0; i<n_part; i++) {
       towrite[i] = 1;
@@ -63,6 +62,10 @@ EdPhysics::~EdPhysics(){
 
 void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
   // target info
+
+    double  e_lab = model->GetEnergy();
+    out->SetEin(e_lab);
+    beam.SetPxPyPzE(0.0, 0.0,e_lab,e_lab);
     double tglx = model->GetLx();
     double tgly = model->GetLy();
     double tglength = model->GetLength();

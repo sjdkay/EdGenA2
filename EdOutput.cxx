@@ -31,6 +31,7 @@ void EdOutput::InitTree(){
   
     fTree->Branch("phi", phi, "phi[n_part]/D");
     fTree->Branch("x", &x, "x/D");
+    fTree->Branch("Ein_beam", &Ein, "Ein_beam/D");
     fTree->Branch("Ef", Ef, "Ef[n_part]/D");
  
     fTree->Branch("Q2", &Q2, "Q2/D");

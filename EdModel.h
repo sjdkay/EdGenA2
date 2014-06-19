@@ -6,6 +6,9 @@
 #include <cstdlib>
 
 #include <TVector3.h>
+#include <TH1F.h>
+#include "TTree.h"
+
 
 // HG electron beam
 
@@ -19,10 +22,13 @@ class EdModel{
 	double GetLy() {return len_y; }
 	int    Get_tgZ() {return tg_Z; }
 	int    Get_tgN() {return tg_N; }
-	double GetEnergy() {return energy; }
+	double GetEnergy();
+	double GetBeamPID() {return beam_pid;}
 	double GetTheta_min() {return theta_min;}
 	double GetTheta_max() {return theta_max;}
+	//	char* GetInFileName() {return ifile.data()};
 	int    GetNpart() {return npart;}
+	int    GetPhModel() {return ph_model;}
 	TVector3 GetTgtOffset(){ return offset; }
 	int    GetPid(int i){ return pid[i]; }
 	int    GetNvertex(){ return nvertex; }
@@ -38,7 +44,10 @@ class EdModel{
 	double len_y;
 	int    tg_Z;
 	int    tg_N;
+	int    ph_model;
+	TString ifile;
 	double energy;
+	int    beam_pid;
 	double theta_min;
 	double theta_max;
 	int    pid[100];
@@ -50,5 +59,6 @@ class EdModel{
 	int    v_type[10]; // vertex type (1= ratio  of probability , 2= cross section
 	double v_ratio[10]; // ration to be applied to vertex
 	TVector3 offset;
+	TH1F   *H1_spec;
 };
 #endif//__EdModel_h

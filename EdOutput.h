@@ -58,6 +58,7 @@ class EdOutput {
 	void Setpz(double *, int);
 	void Setparticle_id(int *, int);
 	void Setcharge(int *, int);
+	void SetEin(double val){Ein = val;}
 	void Setx(double val){x = val;}
 	void SetW(double val){W = val; }
 	void Sety(double val){y = val; }
@@ -91,6 +92,7 @@ class EdOutput {
 	double px[MAX_PART];
 	double py[MAX_PART];
 	double pz[MAX_PART];
+	double Ein;
 	double x;
 	double W;
 	double y;

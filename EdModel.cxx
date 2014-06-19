@@ -4,9 +4,33 @@ EdModel::EdModel(EdInput *inp){
 
     if( inp ){
       int tot_part = 100;
+      ifile = inp->GetIfile();
 	length = inp->Get_length();
 	len_x = inp->Get_lenx();
 	len_y = inp->Get_leny();
+	ph_model = inp->GetModel();
+	beam_pid = inp->GetBeamPID();
+	if (ph_model == 2) {
+	  Float_t Energy_1, Energy_2, E_counts;
+	  TTree *Input_spectrum = new TTree("Hin", "HG Monte Carlo input");
+	  Input_spectrum->Branch("Energy_1",&Energy_1,"Energy_1/F");
+	  Input_spectrum->Branch("Energy_2",&Energy_2,"Energy_2/F");
+	  Input_spectrum->Branch("E_counts",&E_counts,"E_counts/F");
+	  printf("Reading input file %s\n",ifile.Data());
+	  Input_spectrum->ReadFile(ifile.Data(), "Energy_1:Energy_2:E_counts");
+	  H1_spec = new TH1F("H1_spec","H1_spec",Input_spectrum->GetEntries(),Input_spectrum->GetMinimum("Energy_1"),Input_spectrum->GetMaximum("Energy_2"));
+	  Axis_t *new_bins = new Axis_t[Input_spectrum->GetEntries() + 1];	    
+	  TAxis *axis = H1_spec->GetXaxis(); 
+	  for (int i=0; i< Input_spectrum->GetEntries(); i++) {
+	    Input_spectrum->GetEntry(i);
+	    new_bins[i] = Energy_1;
+	    H1_spec->SetBinContent(i+1,E_counts);
+	    if (i+1 == Input_spectrum->GetEntries()) new_bins[i+1] = Energy_2; 
+	  }
+	  axis->Set(Input_spectrum->GetEntries(), new_bins); 
+	  delete new_bins; 
+	  delete Input_spectrum;
+	}
 	tg_Z = inp->Get_tg_Z();
 	tg_N = inp->Get_tg_N();
 	energy = inp->Get_eEnergy();
@@ -39,4 +63,18 @@ EdModel::EdModel(EdInput *inp){
 
 EdModel::~EdModel(){
     return;
+}
+
+
+double EdModel::GetEnergy(){
+  double e_out;
+  if (ph_model == 1) { // PhaseSpace Single Energy
+    e_out = energy;
+
+  }
+  else if (ph_model == 2) { // PhaseSpace Multiple Energy
+    e_out = H1_spec->GetRandom();
+  }
+
+  return e_out;
 }

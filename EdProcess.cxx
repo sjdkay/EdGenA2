@@ -3,9 +3,9 @@
 EdProcess::EdProcess(const char *file, char *file2){
 
     finp   = new EdInput(file);
+    fout  = new EdOutput(finp,file2);
     fmodel = new EdModel(finp);
     fphy  = new EdPhysics(fmodel);
-    fout  = new EdOutput(finp,file2);
    
  
     return;

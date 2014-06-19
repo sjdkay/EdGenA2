@@ -2,11 +2,13 @@
 #define __EdInput_h
 
 #include "TObject.h"
-
+#include "TString.h"
 
 struct inputdata {
     int    nevt;
     int    nprnt;
+    int    model;
+   TString ifile;
     int    npart; // total number of particles involved
     int    nvertex; // total number of vertexes
     int    npvert[10]; // total number of particle at one vertex
@@ -16,6 +18,7 @@ struct inputdata {
     double v_ratio[10]; // ration to be applied to vertex
 
     int    pid[100];
+    int    beam_pid;
     double e_energy;
     double length;
     double lenx;
@@ -34,7 +37,7 @@ struct inputdata {
 
 };
 
-class EdInput {
+class EdInput{ 
     public:
 	 EdInput(const char *file);
 	~EdInput();
@@ -42,6 +45,9 @@ class EdInput {
 	int    GetNevt(){ return fData.nevt; }
 	int    GetNprnt(){ return fData.nprnt; }
 	int    GetNpart(){ return fData.npart; }
+	int    GetModel(){ return fData.model; }
+      TString  GetIfile(){ return fData.ifile; }
+	int    GetBeamPID(){ return fData.beam_pid; }
 	int    GetNvertex(){ return fData.nvertex; }
 	int    GetOvert(int i){ return fData.overt[i]; }
 	int    GetNpvert(int i){ return fData.npvert[i]; }
