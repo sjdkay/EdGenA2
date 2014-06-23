@@ -169,6 +169,7 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
     Q2= -Q4vector.M2(); 
     nu= Q4vector.Dot(target)/target.M(); 
     x = Q2/(2*target.M()*nu);
+    //    if (isnan(e_lab) || isnan(W)) printf("E_in=%.3e \n",e_lab);
     y = Q4vector.Dot(target)/beam.Dot(target);
 
     out->SetZ_ion(Z_ion);
@@ -227,3 +228,194 @@ TVector3 EdPhysics::Decay_vertex(TLorentzVector *Vp_4, int i, TVector3 vert) {
   return result;
 
 }
+
+
+// double EdPhysics::t_mc() {
+
+//   // 11 = electron , -211 = pi- , 211 = pi+
+
+
+
+//   TVector3 V3_1 , V3_2 ,V3_3;
+//   V3_1.SetXYZ(px_mc(11),py_mc(11),pz_mc(11));
+//   V3_2.SetXYZ(0,0,Ebeam);
+//   V3_3 = V3_2 - V3_1;   // Virtual photon momentum vector
+  
+
+//   TLorentzVector V4_1(V3_3,(Ebeam - V3_1.Mag())); // Virtual photon quadrimomentum
+//   V3_1.SetXYZ(px_mc(-211),py_mc(-211),pz_mc(-211));
+//   V3_2.SetXYZ(px_mc(211),py_mc(211),pz_mc(211));
+
+//   TLorentzVector V4_2(V3_1,sqrt(V3_1.Mag2() + pow(0.13957,2))); // pi- quadrimomentum
+//   TLorentzVector V4_3(V3_2,sqrt(V3_2.Mag2() + pow(0.13957,2))); // pi+ quadrimomentum
+  
+  
+//   t_rho = - (V4_1 - V4_2 - V4_3) * (V4_1 - V4_2 - V4_3);
+
+//   return t_rho;
+
+// }
+
+
+// Double_t TPart_ident_ct::theta_pip_mc() {
+
+//   p_theta_pip_mc = 0;
+
+//   TVector3 V3_e, V3_e2;
+//   TVector3 V3_1 , V3_2 , V3_3, V3_4;
+
+//   V3_e.SetXYZ(0,0,Ebeam); // e beam momentum
+//   V3_e2.SetXYZ(px_mc(11),py_mc(11),pz_mc(11)); // Scattered electron  
+//   V3_1.SetXYZ(px_mc(-211),py_mc(-211),pz_mc(-211)); // pi- 3-momentum
+//   V3_2.SetXYZ(px_mc(211),py_mc(211),pz_mc(211)); // pi+ 3-momentum
+//   V3_4 = ( V3_e - V3_e2 ) - ( V3_1 + V3_2) ; // outgoing proton
+// 					     // 3-momentum = - t =
+// 					     // gamma* - rho0
+
+//   TLorentzVector V4_1(V3_1,sqrt(V3_1.Mag2() + pow(0.13957,2))); // pi- quadrimomentum
+//   TLorentzVector V4_2(V3_2,sqrt(V3_2.Mag2() + pow(0.13957,2))); // pi+ quadrimomentum
+//   TLorentzVector V4_4(V3_4,sqrt(V3_4.Mag2() + pow(0.938272,2))); // outgoing proton quadrimomentum
+
+
+//   TLorentzVector V4_3 ; // rho momentum
+//   V4_3 = V4_1 + V4_2; 
+//   V3_3 = V3_1 + V3_2;
+
+//   TVector3 b_3 ; // beta to boost the LAB frame for going in the rho0
+// 		 // rest frame 
+
+//   b_3 = V4_3.BoostVector(); // return (px/E,py/E,pz/E) (is all in GeV)
+
+//   b_3 = - b_3; // the Boost function in TLorentzVector is an anti-lorentz transform 
+
+//   V4_4.Boost(b_3); // proton in the rho0 frame
+
+//   V4_2.Boost(b_3); // pi+ in the rho0 frame
+
+//   V3_4.SetXYZ(V4_4.Px(),V4_4.Py(),V4_4.Pz()) ; // proton momentum in
+// 					       // the rho0 frame
+//   V3_2.SetXYZ(V4_2.Px(),V4_2.Py(),V4_2.Pz()) ; // pi+ momentum in
+// 					       // the rho0 frame
+  
+//   p_theta_pip_mc = TMath::Pi() - V3_2.Angle(V3_4) ;  // angle between
+// 						     // the opposite 
+// 						     // of the
+// 						     // direction of
+// 						     // the proton and
+// 						     // the pi+
+  
+//   return p_theta_pip_mc;
+  
+  
+  
+
+
+// }
+
+// //-----------------------------------------
+
+// double EdPhysics::phi_lep_had_mc() {
+
+//   // 11 = electron , -211 = pi- , 211 = pi+
+
+//   p_phi_lep_had = 0;
+
+//   TVector3 V3_1 , V3_2 ,V3_3 , V3_4, V3_5, V3_6;
+//   V3_1.SetXYZ(px_mc(11),py_mc(11),pz_mc(11)); // e' momentum
+//   V3_2.SetXYZ(0,0,Ebeam); // e momentum
+//   V3_3 = V3_2 - V3_1;   // Virtual photon momentum vector
+//   V3_4.SetXYZ(px_mc(211),py_mc(211),pz_mc(211)); // pi+ momentum
+//   V3_5.SetXYZ(px_mc(-211),py_mc(-211),pz_mc(-211)); // pi- momentum
+//   V3_6 = V3_4 + V3_5; // rho0 momentum
+
+
+//   TVector3 n_lep, n_had;
+
+//   n_lep = V3_2.Cross(V3_1);
+
+//   n_had = V3_3.Cross(V3_6);
+
+  
+//   p_phi_lep_had = n_lep.Angle(n_had);
+
+//   return p_phi_lep_had;
+
+// }
+
+
+// double EdPhysics::phi_pip_mc() {
+
+//    p_phi_pip_mc = 0;
+  
+//   TVector3 V3_e, V3_e2, V3_g;
+//   TVector3 V3_1 , V3_2 , V3_3, V3_4;
+
+//   V3_e.SetXYZ(0,0,Ebeam); // e beam momentum
+//   V3_e2.SetXYZ(px_mc(11),py_mc(11),pz_mc(11)); // Scattered electron  
+//   V3_1.SetXYZ(px_mc(-211),py_mc(-211),pz_mc(-211)); // pi- 3-momentum
+//   V3_2.SetXYZ(px_mc(211),py_mc(211),pz_mc(211)); // pi+ 3-momentum
+//   V3_4 = ( V3_e - V3_e2 ) - ( V3_1 + V3_2) ; // outgoing proton
+// 					     // 3-momentum = - t =
+// 					     // gamma* - rho0
+//   V3_g = V3_e - V3_e2;  // gamma* momentum
+
+//   TLorentzVector V4_1(V3_1,sqrt(V3_1.Mag2() + pow(0.13957,2))); // pi- quadrimomentum
+//   TLorentzVector V4_2(V3_2,sqrt(V3_2.Mag2() + pow(0.13957,2))); // pi+ quadrimomentum
+//   TLorentzVector V4_4(V3_4,sqrt(V3_4.Mag2() + pow(0.938272,2))); // outgoing proton quadrimomentum
+
+
+//   TLorentzVector V4_3 ; // rho momentum
+//   V4_3 = V4_1 + V4_2; 
+//   V3_3 = V3_1 + V3_2;
+
+
+//   TVector3 n_had, n_z, n_x , opip;
+
+//   n_had = V3_g.Cross(V3_3);  // p_gamma* X p_rho    : is parallel to
+// 			     //                       the y axis and
+// 			     //                       is perpendicular
+// 			     //                       to the boost
+//                              // it is let unchanged from the boost
+
+//   n_had = n_had.Unit();      // creatin the unit vector in the
+// 			     // y direction 
+
+//   TVector3 b_3 ; // beta to boost the LAB frame for going in the rho0
+// 		 // rest frame 
+
+//   b_3 = V4_3.BoostVector(); // return (px/E,py/E,pz/E) (is all in GeV)
+
+//   b_3 = - b_3;
+
+//   V4_4.Boost(b_3); // proton in the rho0 frame
+
+//   V4_2.Boost(b_3); // pi+ in the rho0 frame
+
+//   V3_4.SetXYZ(V4_4.Px(),V4_4.Py(),V4_4.Pz()) ; // proton momentum in
+// 					       // the rho0 frame
+//   V3_2.SetXYZ(V4_2.Px(),V4_2.Py(),V4_2.Pz()) ; // pi+ momentum in
+// 					       // the rho0 frame
+  
+//   n_z = - V3_4.Unit();  // z axis is opposite to the outgoing proton
+//   n_x = n_had.Cross(n_z); // x axis = (y axis) X (z axis)  
+
+//   opip = n_z.Cross(V3_2);
+
+//   Double_t sen_phi_ev = asin( - n_x.Dot(opip) / opip.Mag());
+
+//   p_phi_pip_mc = acos(n_had.Dot(opip) / opip.Mag()); // this angle is
+// 						     // defined from 0
+// 						     // to 2 Pi
+//   if (sen_phi_ev < 0 ) {
+//     p_phi_pip_mc = 2 * TMath::Pi() - p_phi_pip_mc ;  // if sen (phi)<0
+// 						     // phi= 2Pi - phi
+			     
+//   }
+   
+  
+//   return p_phi_pip_mc;
+  
+  
+
+
+// }
