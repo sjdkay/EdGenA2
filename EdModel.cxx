@@ -68,13 +68,13 @@ EdModel::~EdModel(){
 
 
 double EdModel::GetEnergy(){
-  double e_out;
+  double e_out = 0.;
   if (ph_model == 1) { // PhaseSpace Single Energy
     e_out = energy;
 
   }
   else if (ph_model == 2) { // PhaseSpace Multiple Energy
-    e_out = H1_spec->GetRandom();
+    while (isnan(e_out) || e_out ==0) e_out = H1_spec->GetRandom();
   }
 
   return e_out;
