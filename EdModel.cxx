@@ -33,6 +33,7 @@ EdModel::EdModel(EdInput *inp){
 	}
 	tg_Z = inp->Get_tg_Z();
 	tg_N = inp->Get_tg_N();
+	tg_mass = inp->Get_tg_mass();
 	energy = inp->Get_eEnergy();
 	theta_min = inp->Get_thetaMin();
 	theta_max = inp->Get_thetaMax();

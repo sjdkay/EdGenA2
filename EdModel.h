@@ -22,6 +22,7 @@ class EdModel{
 	double GetLy() {return len_y; }
 	int    Get_tgZ() {return tg_Z; }
 	int    Get_tgN() {return tg_N; }
+	double Get_tgMass() {return tg_mass; }
 	double GetEnergy();
 	double GetBeamPID() {return beam_pid;}
 	double GetTheta_min() {return theta_min;}
@@ -44,6 +45,7 @@ class EdModel{
 	double len_y;
 	int    tg_Z;
 	int    tg_N;
+	double tg_mass;
 	int    ph_model;
 	TString ifile;
 	double energy;

@@ -29,6 +29,7 @@ struct inputdata {
 
     int    tg_Z;
     int    tg_N;
+    double tg_mass;
     double off_x;
     double off_y;
     double off_z;
@@ -59,6 +60,7 @@ class EdInput{
 	double Get_length(){ return fData.length; }
 	int    Get_tg_Z(){ return fData.tg_Z; }
 	int    Get_tg_N(){ return fData.tg_N; }
+	double Get_tg_mass(){ return fData.tg_mass; }
 	double Get_lenx(){ return fData.lenx; }
 	double Get_leny(){ return fData.leny; }
 	int    Get_fmt(){ return fData.out_fmt; }

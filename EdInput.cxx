@@ -95,6 +95,18 @@ EdInput::EdInput(const char *file){
 	  fData.tg_N = valcommand.Atoi();
 	  printf("Target N: %d\n",fData.tg_N);
 	}
+	if (valcommand.Contains("tg_mass:")) {
+	  valcommand.ReplaceAll("tg_mass:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  if (valcommand.Contains("MeV")) factor = 0.001;
+	  else factor = 1;
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("GeV","");
+	  valcommand.ReplaceAll("MeV","");
+	  fData.tg_mass = factor*valcommand.Atof();
+	  printf("Target Mass: %.4e\n",fData.tg_mass);
+	}
 	if (valcommand.Contains("length:")) {
 	  valcommand.ReplaceAll("length:","");
 	  valcommand.ReplaceAll(";","");
