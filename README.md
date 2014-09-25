@@ -22,7 +22,6 @@ Install
 -------
 This version is running correctly on ifarm.jlab.org. The version of cmake there is too old, so, just use /work/halla/parity/disk2/zana/Cmake/cmake-2.8.8/bin/cmake rather than the default cmake.
 * cd EdGen (go to the EdGen directory)
-* git checkout Development (switch to this version).
 * mkdir build
 * cd build
 * if you want to install BOS output support you will need to have correctly setup in your environment variables CLAS6LIB CLAS6INC and CERNLIB (the environment show before has been tested)
