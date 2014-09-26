@@ -67,7 +67,7 @@ Input file
 
 Models
 -------
-*  1 Phase Space Single Energy (for example e-)
+* 1 Phase Space Single Energy (for example e-)
 * 2 Phase Space Energy Spectrum (for example gamma)
 * 3 Cross Section (sorry, not yet)
 * 4 Amplitudes (sorry, not yet) 
