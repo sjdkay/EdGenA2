@@ -33,7 +33,7 @@ This version is running correctly on ifarm.jlab.org. The version of cmake there 
 Running
 -------
 * cd EdGen/output (go to the output directory)
-* A table with particle properties is in this directory (from PDG) eg_pdg_table.txt :Modify it if you need it. 
+* A table with particle properties is in this directory (from PDG) eg_pdg_table.txt :Modify it if you need it. An example of how to add particles to this table are written at the end of the file. At now the information used are just the mass, the charge of the particle and the lifetime (if the particle has vertex in your reaction diagram for this MonteCarlo. 
 * A template is in input.dat (input_test.dat it is just for my developments at now), and modify the file to fit your reaction
 * In input.dat one can specify the input spetrum (for example for CLAS photon beam). The input spectrum file is written in a txt files format with raw that represent for each bin E_min, E_max, Counts (Does not need to be normalize, the code is going to normalize it if need it). The bin size do not need to be the same for each bin.  An example is written in the output directory as energy.txt 
 * ./EdGen -h will give you the options
@@ -49,6 +49,7 @@ Input file
 * en:	 11.0    GeV;		 BEAM ENERGY (NEEDED FOR OPTION MODEL = 1)
 * tg_Z:    1;	 		 TARGET Z (NOT WORKING YET)
 * tg_N:    1;			 TARGET N (NOT WORKING YET)
+* tg_mass  1.876  GeV;           TARGET MASS
 * length:	 40	cm;		 LENGTH TARGET
 * ras_x:	 0.2	cm;		 BEAM PROFILE (GAUSSIAN SIGMA IN THE X DIRECTION)
 * ras_y:	 0.2	cm;		 BEAM PROFILE (GAUSSIAN SIGMA IN THE Y DIRECTION)
