@@ -227,8 +227,10 @@ void  EdOutput::MakeFileBOS(){
   file.ReplaceAll("root","bos"); 
 #ifdef CLAS6LIB  
   clasHEAD_t *HEAD;
+  clasMCEV_t *MCEV;
   clasMCTK_t *MCTK;
   clasMCVX_t *MCVX;
+
   
   int BosOutputUnitNo = 2; // unit to open for writing (!?!?!?!? FORTRAN)
   int maxFileLength = 2000000;  // Maximum length of the bos file (bos files can be maximum this size)
@@ -246,7 +248,7 @@ void  EdOutput::MakeFileBOS(){
   fparm_c(mess);
   initbos(); // c_bos_io format
 
-  bankList(&bcs_, "C=","HEADMCTKMCVX");  // Write HEAD MCTK MCVX banks into the bos file
+  bankList(&bcs_, "C=","HEADMCEVMCTKMCVX");  // Write HEAD MCTK MCVX banks into the bos file
 
    for (int i=0; i<nentries ; i++) {
     fTree->GetEntry(i);
@@ -261,21 +263,26 @@ void  EdOutput::MakeFileBOS(){
 
     //   // Filling the array for bcs_ from the TTree
     HEAD = (clasHEAD_t *) makeBank(&bcs_,"HEAD",0,8,1); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)
-    MCTK = (clasMCTK_t *) makeBank(&bcs_,"MCTK",1,11,tot_part); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)  
-    MCVX = (clasMCVX_t *) makeBank(&bcs_,"MCVX",2,5,1); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)
+    MCTK = (clasMCEV_t *) makeBank(&bcs_,"MCEV",0,2,1); 
+    MCTK = (clasMCTK_t *) makeBank(&bcs_,"MCTK",0,11,tot_part); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)  
+    MCVX = (clasMCVX_t *) makeBank(&bcs_,"MCVX",0,5,1); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)
     
     h.version = 0;
     h.nrun = 10; // gsim run
     h.nevent = i+1; // number of event
     h.time = time(NULL); // time in seconds since Jan 1, 1970
-    h.type = -3;
+    h.type = -2;
     h.roc = 0;
     h.evtclass = 7;
     mctk_array_n = 0;
-
+    
+    MCEV->mcev[0].i1=(int)(rand()*100000);
+    MCEV->mcev[0].i2=(int)(rand()*100000); 
+    
     MCVX->mcvx[0].x =vx[0]*100.0;
     MCVX->mcvx[0].y =vy[0]*100.0;
     MCVX->mcvx[0].z =vz[0]*100.0;
+ 
  
 
     for (int j=0; j<n_part; j++) {
