@@ -6,17 +6,20 @@ project(EdGen)
 set(useROOT true)        # use true or false
 include(FindROOT.cmake)
 
+message(STATUS "CLAS6LIB " $ENV{CLAS6LIB})
 set(WITHBOS $ENV{CLAS6LIB})
 if(WITHBOS)
 	include_directories(${PROJECT_SOURCE_DIR} ${ROOT_INCLUDE_DIR} $ENV{CLAS6INC})
 	set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR} $ENV{CLAS6LIB} $ENV{CERNLIB}
+${ROOT_LIBRARY_DIR} $ENV{CLAS6LIB} $ENV{CERNLIB}		    
 )
+	message("Setting also BOS output")
 else()
 	include_directories(${PROJECT_SOURCE_DIR} ${ROOT_INCLUDE_DIR} )
 	set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}
+${ROOT_LIBRARY_DIR}	
 )
+	message("No CLAS6LIB found")
 endif()
 
 link_directories( ${LINK_DIRECTORIES})

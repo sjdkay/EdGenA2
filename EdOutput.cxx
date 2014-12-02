@@ -263,7 +263,7 @@ void  EdOutput::MakeFileBOS(){
 
     //   // Filling the array for bcs_ from the TTree
     HEAD = (clasHEAD_t *) makeBank(&bcs_,"HEAD",0,8,1); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)
-    MCTK = (clasMCEV_t *) makeBank(&bcs_,"MCEV",0,2,1); 
+    MCEV = (clasMCEV_t *) makeBank(&bcs_,"MCEV",0,2,1); 
     MCTK = (clasMCTK_t *) makeBank(&bcs_,"MCTK",0,11,tot_part); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)  
     MCVX = (clasMCVX_t *) makeBank(&bcs_,"MCVX",0,5,1); // void *makeBank(BOSbank *bcs, char *bankname, int banknum, int ncol, int nrow)
     
