@@ -11,25 +11,51 @@ set(WITHBOS $ENV{CLAS6LIB})
 if(WITHBOS)
 	include_directories(${PROJECT_SOURCE_DIR} ${ROOT_INCLUDE_DIR} $ENV{CLAS6INC})
 	set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR} $ENV{CLAS6LIB} $ENV{CERNLIB}		    
-)
+	  ${ROOT_LIBRARY_DIR} $ENV{CLAS6LIB} $ENV{CERNLIB}		    
+	  )
+	file(GLOB sources 
+	  ${PROJECT_SOURCE_DIR}/EdGen.cxx
+	  ${PROJECT_SOURCE_DIR}/EdInput.cxx
+	  ${PROJECT_SOURCE_DIR}/EdModel.cxx
+	  ${PROJECT_SOURCE_DIR}/EdOutputBos.cxx
+	  ${PROJECT_SOURCE_DIR}/EdPhysics.cxx
+	  ${PROJECT_SOURCE_DIR}/EdProcess.cxx
+	  )
+	file(GLOB headers 
+	  ${PROJECT_SOURCE_DIR}/EdGen.h
+	  ${PROJECT_SOURCE_DIR}/EdInput.h
+	  ${PROJECT_SOURCE_DIR}/EdModel.h
+	  ${PROJECT_SOURCE_DIR}/EdOutputBos.h
+	  ${PROJECT_SOURCE_DIR}/EdPhysics.h
+	  ${PROJECT_SOURCE_DIR}/EdProcess.h
+	  )
 	message("Setting also BOS output")
 else()
 	include_directories(${PROJECT_SOURCE_DIR} ${ROOT_INCLUDE_DIR} )
 	set(LINK_DIRECTORIES
-${ROOT_LIBRARY_DIR}	
-)
+	  ${ROOT_LIBRARY_DIR}	
+	  )
+	file(GLOB sources 
+	  ${PROJECT_SOURCE_DIR}/EdGen.cxx
+	  ${PROJECT_SOURCE_DIR}/EdInput.cxx
+	  ${PROJECT_SOURCE_DIR}/EdModel.cxx
+	  ${PROJECT_SOURCE_DIR}/EdOutput.cxx
+	  ${PROJECT_SOURCE_DIR}/EdPhysics.cxx
+	  ${PROJECT_SOURCE_DIR}/EdProcess.cxx
+	  )
+	file(GLOB headers 
+	  ${PROJECT_SOURCE_DIR}/EdGen.h
+	  ${PROJECT_SOURCE_DIR}/EdInput.h
+	  ${PROJECT_SOURCE_DIR}/EdModel.h
+	  ${PROJECT_SOURCE_DIR}/EdOutput.h
+	  ${PROJECT_SOURCE_DIR}/EdPhysics.h
+	  ${PROJECT_SOURCE_DIR}/EdProcess.h
+	  )
 	message("No CLAS6LIB found")
 endif()
 
 link_directories( ${LINK_DIRECTORIES})
 
-#----------------------------------------------------------------------------
-# Locate sources and headers for this project
-# NB: headers are included so they will show up in IDEs
-#
-file(GLOB sources ${PROJECT_SOURCE_DIR}/*.cxx)
-file(GLOB headers ${PROJECT_SOURCE_DIR}/*.h)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
