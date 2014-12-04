@@ -1,8 +1,8 @@
-nevt:    20000;
-nprint:  1000;
-model:   2;
+nevt:    100000;
+nprint:  10000;
+model:   1;
 ifile:	 energy.txt; 
-beam:    22;
+beam:    11;
 en:	 11.0    GeV;
 tg_Z:    1;
 tg_N:    1;
@@ -10,16 +10,16 @@ tg_mass: 1875.61 MeV;
 length:	 40	cm;
 ras_x:	 0.2	cm;
 ras_y:	 0.2	cm;	
-theta:   1.57,3.14 rad;
+theta:   0.0,3.14 rad;
 offset:  0.12,0.14,1.1 cm;
 npart:   5;
-pid:     11,800001,113,211,-211;
+pid:     11,2212,113,211,-211;
 nvertex: 2;
 vertex:  0,3;
 v_type:  1,1.0;
 vertex:  3,2;
 v_type:  1,1.0;
-output:  2;
+output:  1;
 END
 #Models
 # 1 Phase Space Single Energy (for example e-)
