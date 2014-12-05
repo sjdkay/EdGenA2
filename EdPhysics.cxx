@@ -108,7 +108,7 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
     int valid_event = 0;
     int failed_event = 0;
     
-    while (valid_event<nvertex) { // Loop to check if at each vertex the mass of the products is less than the mass going to the vertex.
+    //  while (valid_event<nvertex) { // Loop to check if at each vertex the mass of the products is less than the mass going to the vertex.
       //    if (valid_event>0) printf("valid events =%i but nvertex=%i",valid_event,nvertex);
       valid_event = 0;
       for (int i=0; i<nvertex; i++) {
@@ -168,8 +168,8 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
 	  }
 	}
       }
-      failed_event++; // Number of maximum failed events (failed in at least one vertex the mass check)
-    }
+      //     failed_event++; // Number of maximum failed events (failed in at least one vertex the mass check)
+      //   }
     
 
      out->SetTheta(theta,n_part);
