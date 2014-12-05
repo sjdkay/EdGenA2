@@ -59,6 +59,8 @@ class EdPhysics: public TGenPhaseSpace{
 	
 	int towrite[MAX_PART];
 	double masses[10][10];
+	double val_mass[10][10];
+	double width[10][10];
 	TRandom2 *fRandom;
 	TLorentzVector Wtg;
 	TLorentzVector beam;

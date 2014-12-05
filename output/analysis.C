@@ -46,12 +46,14 @@ void analysis::SlaveBegin(TTree * /*tree*/)
 
    TString option = GetOption();
    
-   h1_phi = new TH1F("h1_phi","#phi distribution",100,-180,360);
+   h1_phi = new TH1F("h1_phi","#phi distribution",150,-180,360);
    h1_costheta = new TH1F("h1_costheta","cos(#theta) distribution",100,-1.,1.);
+   h1_mass = new TH1F("h1_mass","Mass; GeV",100,0.,1.5);
 
 
    fOutput->Add(h1_phi);
    fOutput->Add(h1_costheta);
+   fOutput->Add(h1_mass);
 }
 
 Bool_t analysis::Process(Long64_t entry)
@@ -90,6 +92,7 @@ Bool_t analysis::Process(Long64_t entry)
   
   h1_phi->Fill(p_pip.Phi()/TMath::Pi()*180.);
   h1_costheta->Fill(p_pip.CosTheta());
+  h1_mass->Fill(p_rho.M());
 
    return kTRUE;
 }
