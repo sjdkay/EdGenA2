@@ -109,7 +109,8 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
     int failed_event = 0;
     
     while (valid_event<nvertex) { // Loop to check if at each vertex the mass of the products is less than the mass going to the vertex.
-      //     valid_event = 0;
+      //    if (valid_event>0) printf("valid events =%i but nvertex=%i",valid_event,nvertex);
+      valid_event = 0;
       for (int i=0; i<nvertex; i++) {
 	if (overt[i] == 0) { // (Origin Beam + Tg)
 	  Wtg = beam + target;
