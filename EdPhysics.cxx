@@ -92,97 +92,30 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
 	n = kNeutron;
     }    
 
-    TLorentzVector *p4vector[n_part+1];
+    
     //    for (int i=0; i<(n_part+1) ; i++) p4vector[i]->SetPxPyPzE(0.,0.,0.,0.);
-    TLorentzVector W4vector(0.,0.,0.,0.);
-    TLorentzVector Q4vector(0.,0.,0.,0.);
+    W4vector.SetXYZT(0.,0.,0.,0.);
+    Q4vector.SetXYZT(0.,0.,0.,0.);
 
     double pos_x = GetBeamProfile(tglx);
     double pos_y = GetBeamProfile(tgly);
     double pos_z = fRandom->Uniform(-0.5*tglength,0.5*tglength);
-    TVector3 vertex(pos_x,pos_y,pos_z);
-    double weight2;
-    double total_mass;
+    vertex.SetXYZ(pos_x,pos_y,pos_z);
     vertex = vertex + tgtoff;
-    int atpart = 0;
-    int valid_event = 0;
-    int failed_event = 0;
-    
-    //  while (valid_event<nvertex) { // Loop to check if at each vertex the mass of the products is less than the mass going to the vertex.
-      //    if (valid_event>0) printf("valid events =%i but nvertex=%i",valid_event,nvertex);
-      valid_event = 0;
-      for (int i=0; i<nvertex; i++) {
-	if (overt[i] == 0) { // (Origin Beam + Tg)
-	  Wtg = beam + target;
-	}
-	else {
-	  Wtg = *p4vector[overt[i]-1];
-	}
-	total_mass = 0.;
-	for (int j=0; j<npvert[i]; j++) {
-	  val_mass[i][j] = -1.;
-	  if (width[i][j]>0.001) {
-	    while (val_mass[i][j]< 0.001) val_mass[i][j] = fRandom->BreitWigner(masses[i][j],width[i][j]); // If width > 1MeV, generate the event witha Breit-Wigner probability 
-	  }
-	  else val_mass[i][j] = masses[i][j];
-	  total_mass = total_mass + val_mass[i][j];
-	}
-	SetDecay(Wtg, npvert[i], val_mass[i]);
-	if (Wtg.M() > total_mass) { // mass check at each vertex
-	  valid_event++;
-	  weight2 = Generate();
-	  for (int j=0; j<npvert[i]; j++) {
-	    p4vector[atpart] = GetDecay(j);
-	    //	cout << "Particle n." << atpart << " Mass=" << p4vector[atpart]->M() << endl; 
-	    theta[atpart] = p4vector[atpart]->Theta();
-	    phi[atpart] = p4vector[atpart]->Phi();
-	    Ef[atpart] = p4vector[atpart]->E();
-	    pf[atpart] = p4vector[atpart]->Rho();
-	    px[atpart] = p4vector[atpart]->Px();
-	    py[atpart] = p4vector[atpart]->Py();
-	    pz[atpart] = p4vector[atpart]->Pz();
-	    if (atpart<npvert[0] && atpart>0) W4vector += *p4vector[atpart]; // I am assuming that the first particle is the scattered beam
-	    if (atpart == 0)      Q4vector= beam - *p4vector[0];
-	    weight[atpart] = weight2;
-	    if (overt[i] ==0) {
-	      vx[atpart] = vertex.X();
-	      vy[atpart] = vertex.Y();
-	      vz[atpart] = vertex.Z();
-	    }
-	    else {
-	      if (part_pdg[overt[i]-1]->Stable() == 1) {
-		printf("Origin particle %i at vertex %i is stable??? vertexes of daughters particles as mother \n", particle_id[overt[i]-1],i); 
-		vx[atpart] = vx[overt[i]-1];
-		vy[atpart] = vy[overt[i]-1];
-		vz[atpart] = vz[overt[i]-1];
-	      }
-	      else {
-		vertex.SetXYZ(vx[overt[i]-1],vy[overt[i]-1],vz[overt[i]-1]);
-		vertex = Decay_vertex(p4vector[overt[i]-1],(overt[i]-1),vertex);
-		vx[atpart] = vertex.X() ;
-		vy[atpart] = vertex.Y();
-		vz[atpart] = vertex.Z();
-	      }
-	    }
-	    atpart++;
-	  }
-	}
-      }
-      //     failed_event++; // Number of maximum failed events (failed in at least one vertex the mass check)
-      //   }
-    
+    int test_gen;
+    test_gen = Gen_Phasespace();
 
-     out->SetTheta(theta,n_part);
-     out->SetPhi(phi,n_part);
-     out->SetEf(Ef,n_part);
-     out->Setpf(pf,n_part);
-     out->Setpx(px,n_part);
-     out->Setpy(py,n_part);
-     out->Setpz(pz,n_part);
-     out->Setparticle_id(particle_id,n_part);
-     out->Setcharge(charge,n_part);
-     out->Setweight(weight,n_part);
-     out->Settowrite(towrite,n_part);
+    out->SetTheta(theta,n_part);
+    out->SetPhi(phi,n_part);
+    out->SetEf(Ef,n_part);
+    out->Setpf(pf,n_part);
+    out->Setpx(px,n_part);
+    out->Setpy(py,n_part);
+    out->Setpz(pz,n_part);
+    out->Setparticle_id(particle_id,n_part);
+    out->Setcharge(charge,n_part);
+    out->Setweight(weight,n_part);
+    out->Settowrite(towrite,n_part);
     
     // Here I need to fix the energy, because I do not know the kinematics at now and I generate randomly the momentum.
     
@@ -252,7 +185,78 @@ TVector3 EdPhysics::Decay_vertex(TLorentzVector *Vp_4, int i, TVector3 vert) {
 
 }
 
+int EdPhysics::Gen_Phasespace(){
 
+      //    if (valid_event>0) printf("valid events =%i but nvertex=%i",valid_event,nvertex);
+  TLorentzVector *p4vector[n_part+1];
+  double weight2;
+  double total_mass;
+  int atpart = 0;
+  int valid_event = 0;
+  int failed_event = 0;
+  valid_event = 0;
+  for (int i=0; i<nvertex; i++) {
+    if (overt[i] == 0) { // (Origin Beam + Tg)
+      Wtg = beam + target;
+    }
+    else {
+      Wtg = *p4vector[overt[i]-1];
+    }
+    total_mass = 0.;
+    for (int j=0; j<npvert[i]; j++) {
+      val_mass[i][j] = -1.;
+      if (width[i][j]>0.001) {
+	while (val_mass[i][j]< 0.001) val_mass[i][j] = fRandom->BreitWigner(masses[i][j],width[i][j]); // If width > 1MeV, generate the event witha Breit-Wigner probability 
+      }
+      else val_mass[i][j] = masses[i][j];
+      total_mass = total_mass + val_mass[i][j];
+    }
+    SetDecay(Wtg, npvert[i], val_mass[i]);
+    if (Wtg.M() > total_mass) { // mass check at each vertex
+      valid_event++;
+      weight2 = Generate();
+      for (int j=0; j<npvert[i]; j++) {
+	p4vector[atpart] = GetDecay(j);
+	//	cout << "Particle n." << atpart << " Mass=" << p4vector[atpart]->M() << endl; 
+	theta[atpart] = p4vector[atpart]->Theta();
+	phi[atpart] = p4vector[atpart]->Phi();
+	Ef[atpart] = p4vector[atpart]->E();
+	pf[atpart] = p4vector[atpart]->Rho();
+	px[atpart] = p4vector[atpart]->Px();
+	py[atpart] = p4vector[atpart]->Py();
+	pz[atpart] = p4vector[atpart]->Pz();
+	if (atpart<npvert[0] && atpart>0) W4vector += *p4vector[atpart]; // I am assuming that the first particle is the scattered beam
+	if (atpart == 0)      Q4vector= beam - *p4vector[0];
+	weight[atpart] = weight2;
+	if (overt[i] ==0) {
+	  vx[atpart] = vertex.X();
+	  vy[atpart] = vertex.Y();
+	  vz[atpart] = vertex.Z();
+	}
+	else {
+	  if (part_pdg[overt[i]-1]->Stable() == 1) {
+	    printf("Origin particle %i at vertex %i is stable??? vertexes of daughters particles as mother \n", particle_id[overt[i]-1],i); 
+	    vx[atpart] = vx[overt[i]-1];
+	    vy[atpart] = vy[overt[i]-1];
+	    vz[atpart] = vz[overt[i]-1];
+	  }
+	  else {
+	    vertex.SetXYZ(vx[overt[i]-1],vy[overt[i]-1],vz[overt[i]-1]);
+	    vertex = Decay_vertex(p4vector[overt[i]-1],(overt[i]-1),vertex);
+	    vx[atpart] = vertex.X() ;
+	    vy[atpart] = vertex.Y();
+	    vz[atpart] = vertex.Z();
+	  }
+	}
+	atpart++;
+      }
+    }
+  }
+ 
+  return valid_event;
+
+
+}
 
 // double EdPhysics::t_reaction(TLorentzVector *Vrecoil_tg_4 ) {
 //   TLorentzVector tg_v4;

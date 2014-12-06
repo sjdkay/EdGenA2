@@ -65,9 +65,13 @@ class EdPhysics: public TGenPhaseSpace{
 	TLorentzVector Wtg;
 	TLorentzVector beam;
 	TLorentzVector target;
+	TLorentzVector W4vector;
+	TLorentzVector Q4vector;
+	TVector3 vertex;
 
 	TVector3 Decay_vertex(TLorentzVector *Vp_4, int i, TVector3 vert);
 	double GetBeamProfile( double sigma = 1.);
+	int Gen_Phasespace();
 
 	 
 };
