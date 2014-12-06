@@ -102,8 +102,8 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
     double pos_z = fRandom->Uniform(-0.5*tglength,0.5*tglength);
     vertex.SetXYZ(pos_x,pos_y,pos_z);
     vertex = vertex + tgtoff;
-    int test_gen;
-    test_gen = Gen_Phasespace();
+    int test_gen = 0;
+    while (test_gen < nvertex ) test_gen = Gen_Phasespace();
 
     out->SetTheta(theta,n_part);
     out->SetPhi(phi,n_part);
