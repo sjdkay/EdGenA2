@@ -9,6 +9,7 @@ EdModel::EdModel(EdInput *inp){
 	len_x = inp->Get_lenx();
 	len_y = inp->Get_leny();
 	ph_model = inp->GetModel();
+	m_model = inp->GetMassModel();
 	beam_pid = inp->GetBeamPID();
 	if (ph_model == 2) {
 	  Float_t Energy_1, Energy_2, E_counts;
@@ -78,4 +79,12 @@ double EdModel::GetEnergy(){
   }
 
   return e_out;
+}
+
+char * EdModel::GetMassModelString(){
+  if (m_model == 1) return "Breit-Wigner";
+  else if (m_model == 2) return "Flat";
+  else if (m_model == 3) return "m=mass";
+  else return "Sorry: No mass model supported. Check your input file";
+
 }

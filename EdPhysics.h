@@ -28,6 +28,7 @@ class EdPhysics: public TGenPhaseSpace{
     private:
 
 	int n_part;
+	int mass_model;
 	int nvertex; // total number of vertexes
 	int npvert[10]; // total number of particle at one vertex
 	int overt[10];  // particle at origin of one vertex (need to be already existing)
@@ -72,6 +73,7 @@ class EdPhysics: public TGenPhaseSpace{
 	TVector3 Decay_vertex(TLorentzVector *Vp_4, int i, TVector3 vert);
 	double GetBeamProfile( double sigma = 1.);
 	int Gen_Phasespace();
+	double Gen_Mass(double mass, double width);
 
 	 
 };

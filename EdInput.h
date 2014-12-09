@@ -8,6 +8,7 @@ struct inputdata {
     int    nevt;
     int    nprnt;
     int    model;
+    int    mass_model;
    TString ifile;
     int    npart; // total number of particles involved
     int    nvertex; // total number of vertexes
@@ -34,7 +35,7 @@ struct inputdata {
     double off_y;
     double off_z;
 
-    int    out_fmt; // 1=root 2=root+LUND
+    int    out_fmt; // 1=root 2=root+LUND 
 
 };
 
@@ -47,6 +48,7 @@ class EdInput{
 	int    GetNprnt(){ return fData.nprnt; }
 	int    GetNpart(){ return fData.npart; }
 	int    GetModel(){ return fData.model; }
+	int    GetMassModel(){ return fData.mass_model; }
       TString  GetIfile(){ return fData.ifile; }
 	int    GetBeamPID(){ return fData.beam_pid; }
 	int    GetNvertex(){ return fData.nvertex; }

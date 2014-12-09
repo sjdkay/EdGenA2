@@ -24,12 +24,14 @@ class EdModel{
 	int    Get_tgN() {return tg_N; }
 	double Get_tgMass() {return tg_mass; }
 	double GetEnergy();
+	char * GetMassModelString();
 	double GetBeamPID() {return beam_pid;}
 	double GetTheta_min() {return theta_min;}
 	double GetTheta_max() {return theta_max;}
 	//	char* GetInFileName() {return ifile.data()};
 	int    GetNpart() {return npart;}
 	int    GetPhModel() {return ph_model;}
+	int    GetMassModel() {return m_model;}
 	TVector3 GetTgtOffset(){ return offset; }
 	int    GetPid(int i){ return pid[i]; }
 	int    GetNvertex(){ return nvertex; }
@@ -47,6 +49,7 @@ class EdModel{
 	int    tg_N;
 	double tg_mass;
 	int    ph_model;
+	int    m_model;
 	TString ifile;
 	double energy;
 	int    beam_pid;

@@ -17,7 +17,7 @@ EdPhysics::EdPhysics(EdModel *model){
     fRandom = new TRandom2(0);
     printf("Seed number %d\n",fRandom->GetSeed());
     target.SetPxPyPzE(0.0, 0.0, 0.0, model->Get_tgMass()); // target at rest
- 
+    mass_model = model->GetMassModel();
     n_part = model->GetNpart();
     nvertex = model->GetNvertex();
     part_pdg[n_part] = pdg->GetParticle(model->GetBeamPID()); // Beam particle stored in part_pdg[n_part]
@@ -30,7 +30,7 @@ EdPhysics::EdPhysics(EdModel *model){
       charge[i] = part_pdg[i]->Charge()/3; // Charge is in unit of |e|/3
       masses2[i] = part_pdg[i]->Mass();
       width2[i] = part_pdg[i]->Width();
-      if (width2[i] > 0.001) printf("Particle n.%i \t pid=%i \t mass=%.3e GeV width=%.3e : Mass will be generated as Breit-Wigner\n",i+1,particle_id[i],masses2[i],width2[i]);
+      if (width2[i] > 0.001) printf("Particle n.%i \t pid=%i \t mass=%.3e GeV width=%.3e : Mass will be generated as %s\n",i+1,particle_id[i],masses2[i],width2[i],model->GetMassModelString());
       else printf("Particle n.%i \t pid=%i \t mass=%.3e GeV width=%.3e \n",i+1,particle_id[i],masses2[i],width2[i]);
       
     }
@@ -185,6 +185,16 @@ TVector3 EdPhysics::Decay_vertex(TLorentzVector *Vp_4, int i, TVector3 vert) {
 
 }
 
+double EdPhysics::Gen_Mass(double mass, double width) {
+  double value;
+  if (mass_model==1) value = fRandom->BreitWigner(mass,width);
+  if (mass_model==2) value = fRandom->Uniform(0.001,Wtg.M());
+  if (mass_model==3) value = mass;
+  if (mass_model <1 || mass_model >3) printf("Mass model %i not allowed: Please check your input file \n",mass_model);
+  return value; 
+}
+
+
 int EdPhysics::Gen_Phasespace(){
 
       //    if (valid_event>0) printf("valid events =%i but nvertex=%i",valid_event,nvertex);
@@ -206,7 +216,7 @@ int EdPhysics::Gen_Phasespace(){
     for (int j=0; j<npvert[i]; j++) {
       val_mass[i][j] = -1.;
       if (width[i][j]>0.001) {
-	while (val_mass[i][j]< 0.001) val_mass[i][j] = fRandom->BreitWigner(masses[i][j],width[i][j]); // If width > 1MeV, generate the event witha Breit-Wigner probability 
+	while (val_mass[i][j]< 0.001) val_mass[i][j] = Gen_Mass(masses[i][j],width[i][j]); // If width > 1MeV, generate the event witha Breit-Wigner probability 
       }
       else val_mass[i][j] = masses[i][j];
       total_mass = total_mass + val_mass[i][j];

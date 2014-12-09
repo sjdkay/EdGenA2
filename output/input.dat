@@ -1,6 +1,7 @@
 nevt:    100000;
 nprint:  10000;
 model:   1;
+M_mode:  2;
 ifile:	 energy.txt; 
 beam:    11;
 en:	 11.0    GeV;
@@ -21,13 +22,18 @@ vertex:  3,2;
 v_type:  1,1.0;
 output:  1;
 END
-#Models
+# Models
 # 1 Phase Space Single Energy (for example e-)
 # 2 Phase Space Energy Spectrum (for example gamma)
 # 3 Cross Section (sorry, not yet)
 # 4 Amplitudes (sorry, not yet) 
 # 5 Data Points (sorry, not yet)
 #
+# M_model (Mass model: if width of particle>1MeV, one can generate the mass according to different distributions)
+# 1 Breit-Wigner (Mass and Width are automatically read from  output/eg_pdg_table.txt)
+# 2 Flat (Generated flat in mass in the allowed range)
+# 3 Just the mass at the center of the distribution
+# 4 Gaussian and more to come
 #
 # output
 # 1  ROOT only

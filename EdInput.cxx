@@ -53,6 +53,13 @@ EdInput::EdInput(const char *file){
 	  fData.model = valcommand.Atoi();
 	  printf("Model for the generator %d\n",fData.model);
 	}
+	if (valcommand.Contains("M_mode:")) {
+	  valcommand.ReplaceAll("M_mode:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.mass_model = valcommand.Atoi();
+	  printf("Mass Model for the decaying particle %d\n",fData.mass_model);
+	}
 	if (valcommand.Contains("ifile:")) {
 	  valcommand.ReplaceAll("ifile:","");
 	  valcommand.ReplaceAll(";","");
