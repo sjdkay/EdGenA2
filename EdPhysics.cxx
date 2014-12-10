@@ -47,19 +47,11 @@ EdPhysics::EdPhysics(EdModel *model){
       for(int j=0; j<npvert[i] ; j++) {
 	masses[i][j] = part_pdg[atpart]->Mass();
 	width[i][j] = part_pdg[atpart]->Width();
-	if (width[i][j] <= 0.001) val_mass[i][j] = masses[i][j];
-	max_mass[i][j] = 0.;
 	printf("(pid=%i %.3e GeV) ", particle_id[atpart], part_pdg[atpart]->Mass());
 	atpart++;
 	if (j==(npvert[i]-1)) printf(" \n");
 	else printf(" + ");
       }
-      for(int j=0; j<npvert[i] ; j++) {
-	for(int k=0; k<npvert[i] ; k++) {
-	  if(width[i][k] <= 0.001 && j != k) max_mass[i][j] = max_mass[i][j] - masses[i][k] ;
-	}
-      }
-
     }
     
  
@@ -193,31 +185,13 @@ TVector3 EdPhysics::Decay_vertex(TLorentzVector *Vp_4, int i, TVector3 vert) {
 
 }
 
-int EdPhysics::Gen_Mass(int i) {
-  // need to put all values of val_mass[i][j]with this function. The return integer is in case the generation is correct (could be a loop with while ( output < npvert[i] ) In this way I can generate all masses according to the value here generated. Also the order of generation, considering the limit should be random.
-  double prob[10];
-  fRandom->RndmArray(npvert[i],prob);
-  int good_gen = 1;
-  int k;
-  double total_gen = 0.;
-  for (int j=0; j<npvert[i] ; j++) {
-    k = (int)TMath::LocMin(npvert[i],prob);
-    if (width[i][k] > 0.001) {
-      val_mass[i][k] = 0.;
-      prob[k] = prob[k] +1;
-      if (mass_model==1 && (Wtg.M()-max_mass[i][k] - total_gen) > 0.001 ) {
-	while (val_mass[i][k] <= 0.001 || val_mass[i][k] > (Wtg.M()-max_mass[i][k] - total_gen)) val_mass[i][k] = fRandom->BreitWigner(masses[i][k],width[i][k]); // Sometimes the random value is outside the limits 
-	       }
-      else if (mass_model==2 && (Wtg.M()-max_mass[i][k] - total_gen) > 0.001 ) {
-	val_mass[i][k] = fRandom->Uniform(0.001,Wtg.M()-max_mass[i][k] - total_gen); // Sometimes the random val_massm is outside the limits ?!??!?!
-      }
-      else if (mass_model==3 && (Wtg.M()-max_mass[i][k] - total_gen) > masses[i][k] ) val_mass[i][k] = masses[i][k] ;
-      else if (mass_model < 1 || mass_model > 3 ) printf("Mass model %i not allowed: Please check your input file \n",mass_model);
-      else good_gen = 0;
-      total_gen = total_gen + val_mass[i][k] ; 
-    }
-  }  // Take away from the mass the stable particle
-  return good_gen; 
+double EdPhysics::Gen_Mass(double mass, double width) {
+  double value;
+  if (mass_model==1) value = fRandom->BreitWigner(mass,width);
+  if (mass_model==2) value = fRandom->Uniform(0.001,Wtg.M());
+  if (mass_model==3) value = mass;
+  if (mass_model <1 || mass_model >3) printf("Mass model %i not allowed: Please check your input file \n",mass_model);
+  return value; 
 }
 
 
@@ -229,7 +203,6 @@ int EdPhysics::Gen_Phasespace(){
   double total_mass;
   int atpart = 0;
   int valid_event = 0;
-  int good_mass = 0; 
   int failed_event = 0;
   valid_event = 0;
   for (int i=0; i<nvertex; i++) {
@@ -239,26 +212,19 @@ int EdPhysics::Gen_Phasespace(){
     else {
       Wtg = *p4vector[overt[i]-1];
     }
-    good_mass=0;
-    while (good_mass == 0) good_mass = Gen_Mass(i); 
     total_mass = 0.;
     for (int j=0; j<npvert[i]; j++) {
-      // val_mass[i][j] = -1.;
-      // if (width[i][j]>0.001) {
-      // 	while (val_mass[i][j]< 0.001) val_mass[i][j] = Gen_Mass(i,j); // If width > 1MeV, generate the event witha Breit-Wigner probability 
-      // }
-      // else val_mass[i][j] = masses[i][j];
+      val_mass[i][j] = -1.;
+      if (width[i][j]>0.001) {
+	while (val_mass[i][j]< 0.001) val_mass[i][j] = Gen_Mass(masses[i][j],width[i][j]); // If width > 1MeV, generate the event witha Breit-Wigner probability 
+      }
+      else val_mass[i][j] = masses[i][j];
       total_mass = total_mass + val_mass[i][j];
     }
-    if (Wtg.M() < total_mass) good_mass = Gen_Mass(i);
-    printf("mass generated Wtg=%.3e total=%.3e good_mass=%i \n",Wtg.M(),total_mass,good_mass);      
+    SetDecay(Wtg, npvert[i], val_mass[i]);
     if (Wtg.M() > total_mass) { // mass check at each vertex
-      printf("mass generated\n");
-
-      SetDecay(Wtg, npvert[i], val_mass[i]);
       valid_event++;
       weight2 = Generate();
-      printf("event generated\n");
       for (int j=0; j<npvert[i]; j++) {
 	p4vector[atpart] = GetDecay(j);
 	//	cout << "Particle n." << atpart << " Mass=" << p4vector[atpart]->M() << endl; 
