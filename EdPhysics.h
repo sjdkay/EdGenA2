@@ -62,6 +62,8 @@ class EdPhysics: public TGenPhaseSpace{
 	double masses[10][10];
 	double val_mass[10][10];
 	double width[10][10];
+	int distr_mass[10][10];
+	double max_mass[10][10];
 	TRandom2 *fRandom;
 	TLorentzVector Wtg;
 	TLorentzVector beam;
@@ -73,7 +75,7 @@ class EdPhysics: public TGenPhaseSpace{
 	TVector3 Decay_vertex(TLorentzVector *Vp_4, int i, TVector3 vert);
 	double GetBeamProfile( double sigma = 1.);
 	int Gen_Phasespace();
-	double Gen_Mass(double mass, double width);
+	int Gen_Mass(int i);
 
 	 
 };
