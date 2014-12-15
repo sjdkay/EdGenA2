@@ -205,16 +205,16 @@ int EdPhysics::Gen_Mass(int i) {
     if (width[i][k] > 0.001) {
       val_mass[i][k] = 0.;
       prob[k] = prob[k] +1;
-      if (mass_model==1 && (Wtg.M()-max_mass[i][k] - total_gen) > 0.001 ) {
-	while (val_mass[i][k] <= 0.001 || val_mass[i][k] > (Wtg.M()-max_mass[i][k] - total_gen)) val_mass[i][k] = fRandom->BreitWigner(masses[i][k],width[i][k]); // Sometimes the random value is outside the limits 
+      if (mass_model==1 && (Wtg.M()+max_mass[i][k] - total_gen) > 0.001 ) {
+	while (val_mass[i][k] <= 0.001 || val_mass[i][k] > (Wtg.M()+max_mass[i][k] - total_gen)) val_mass[i][k] = fRandom->BreitWigner(masses[i][k],width[i][k]); // Sometimes the random value is outside the limits 
 	       }
-      else if (mass_model==1 && (Wtg.M()-max_mass[i][k] - total_gen) < 0.001 ) good_gen = 0;
-      else if (mass_model==2 && (Wtg.M()-max_mass[i][k] - total_gen) > 0.001 ) {
-	val_mass[i][k] = fRandom->Uniform(0.001,Wtg.M()-max_mass[i][k] - total_gen); // Sometimes the random val_massm is outside the limits ?!??!?!
+      else if (mass_model==1 && (Wtg.M()+max_mass[i][k] - total_gen) < 0.001 ) good_gen = 0;
+      else if (mass_model==2 && (Wtg.M()+max_mass[i][k] - total_gen) > 0.001 ) {
+	val_mass[i][k] = fRandom->Uniform(0.001,Wtg.M()+max_mass[i][k] - total_gen); // Sometimes the random val_massm is outside the limits ?!??!?!
       }
-      else if (mass_model==2 && (Wtg.M()-max_mass[i][k] - total_gen) < 0.001 ) good_gen = 0; 
-      else if (mass_model==3 && (Wtg.M()-max_mass[i][k] - total_gen) > masses[i][k] ) val_mass[i][k] = masses[i][k] ;
-      else if (mass_model==3 && (Wtg.M()-max_mass[i][k] - total_gen) > masses[i][k] ) good_gen = 0;
+      else if (mass_model==2 && (Wtg.M()+max_mass[i][k] - total_gen) < 0.001 ) good_gen = 0; 
+      else if (mass_model==3 && (Wtg.M()+max_mass[i][k] - total_gen) > masses[i][k] ) val_mass[i][k] = masses[i][k] ;
+      else if (mass_model==3 && (Wtg.M()+max_mass[i][k] - total_gen) > masses[i][k] ) good_gen = 0;
       else if (mass_model < 1 || mass_model > 3 ) printf("Mass model %i not allowed: Please check your input file \n",mass_model);
       else good_gen = 0;
       total_gen = total_gen + val_mass[i][k] ; 
@@ -252,16 +252,17 @@ int EdPhysics::Gen_Phasespace(){
       // }
       // else val_mass[i][j] = masses[i][j];
       total_mass = total_mass + val_mass[i][j];
+      //     printf("mass vertex %i particle %i total=%.3e mass=%.3e max_mass%.3e \n",i,j,total_mass,val_mass[i][j],max_mass[i][j]);
     }
     if (Wtg.M() < total_mass) good_mass = Gen_Mass(i);
-    printf("mass generated Wtg=%.3e total=%.3e good_mass=%i \n",Wtg.M(),total_mass,good_mass);      
+    //    printf("mass generated Wtg=%.3e total=%.3e good_mass=%i \n",Wtg.M(),total_mass,good_mass);      
     if (Wtg.M() > total_mass) { // mass check at each vertex
-      printf("mass generated\n");
+      //   printf("mass generated\n");
 
       SetDecay(Wtg, npvert[i], val_mass[i]);
       valid_event++;
       weight2 = Generate();
-      printf("event generated\n");
+      //   printf("event generated\n");
       for (int j=0; j<npvert[i]; j++) {
 	p4vector[atpart] = GetDecay(j);
 	//	cout << "Particle n." << atpart << " Mass=" << p4vector[atpart]->M() << endl; 
