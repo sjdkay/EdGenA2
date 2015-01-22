@@ -28,14 +28,6 @@ void EdProcess::Run(){
       if( (evt%nprnt) == 0 ){printf("Event %10d \n", evt);}
       fphy->MakeEvent(fout, fmodel);
     }
-    if (fmt == 2 ) { // also LUND format 
-      printf("Creating LUND output \n") ;
-      fout->MakeFileLUND();
-    }
-    if (fmt == 3 ) { // also LUND format 
-      printf("Creating BOS output \n") ;
-      fout->MakeFileBOS();
-    }
 
 
     fout->Close();
