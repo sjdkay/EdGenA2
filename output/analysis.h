@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Dec  3 13:36:57 2014 by ROOT version 5.34/09
-// from TChain T/
+// Fri Jan 23 10:11:59 2015 by ROOT version 5.34/09
+// from TChain h1/
 //////////////////////////////////////////////////////////
 
 #ifndef analysis_h
@@ -15,44 +15,42 @@
 #include <TVector3.h>
 #include <TMath.h>
 
-
 class   TH1F;
 class   TH2F;
+
 // Header file for the classes stored in the TTree if any.
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
 class analysis : public TSelector {
 public :
-
-  TH1F           *h1_phi;
-  TH1F           *h1_costheta;
-  TH1F           *h1_mass;
+  TH1F            *h1_vz;
+  TH1F            *h1_E;
 
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
 
    // Declaration of leaf types
    Int_t           n_part;
-   Double_t        theta[5];   //[n_part]
-   Double_t        phi[5];   //[n_part]
+   Double_t        theta[2];   //[n_part]
+   Double_t        phi[2];   //[n_part]
    Double_t        x;
    Double_t        Ein_beam;
-   Double_t        Ef[5];   //[n_part]
+   Double_t        Ef[2];   //[n_part]
    Double_t        Q2;
    Double_t        nu;
    Double_t        W;
    Double_t        y;
    Int_t           Z_ion;
    Int_t           N_ion;
-   Int_t           particle_id[5];   //[n_part]
-   Int_t           charge[5];   //[n_part]
-   Double_t        pf[5];   //[n_part]
-   Double_t        px[5];   //[n_part]
-   Double_t        py[5];   //[n_part]
-   Double_t        pz[5];   //[n_part]
-   Double_t        vx[5];   //[n_part]
-   Double_t        vy[5];   //[n_part]
-   Double_t        vz[5];   //[n_part]
+   Int_t           particle_id[2];   //[n_part]
+   Int_t           charge[2];   //[n_part]
+   Double_t        pf[2];   //[n_part]
+   Double_t        px[2];   //[n_part]
+   Double_t        py[2];   //[n_part]
+   Double_t        pz[2];   //[n_part]
+   Double_t        vx[2];   //[n_part]
+   Double_t        vy[2];   //[n_part]
+   Double_t        vz[2];   //[n_part]
    Double_t        weight;
 
    // List of branches
