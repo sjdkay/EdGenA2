@@ -9,6 +9,8 @@
 #include "TTree.h"
 #include "TString.h"
 #include "TChain.h"
+#include "TDatabasePDG.h"
+#include "TParticlePDG.h"
 #include "TRandom2.h"
 #include <stdio.h>
 #include <iostream>
@@ -134,6 +136,8 @@ struct IonCrossRef_t{
 };
 static const IonCrossRef_t kG3toPDGions[] = {
   //          Name      G3      Mass (GeV)      PDG (100ZZZAAA0)
+  { (Char_t*)"gamma",1,0.0, 22 },
+  { (Char_t*)"e-",3, 0.0005109989, 11 }, 
   { (Char_t*)"deuteron",45, 1.875613, 1000010020 },
   { (Char_t*)"triton", 46, 2.80925, 1000010030 },
   { (Char_t*)"alpha", 47, 3.727417, 1000020040 },
@@ -228,8 +232,8 @@ class EdOutput {
 	inline Int_t GetG3Pid( Int_t ipdg )
 	{
 	  for( Int_t i=0;;i++ ){
-	    if( kG3toPDGions[i].iPDG == ENullPDG ) return 0;
-	    if( kG3toPDGions[i].iPDG == ipdg ) return kG3toPDGions[i].iG3;
+	    if( kG3toPDG[i].iPDG == ENullPDG ) return 0;
+	    if( kG3toPDG[i].iPDG == ipdg ) return kG3toPDGions[i].iG3;
 	  }
 	}
 
@@ -255,7 +259,7 @@ class EdOutput {
 	int towrite[MAX_PART];
 
 	int n_part;
-	Float_t mass_beam;
+	int pid_beam;
 	double theta[MAX_PART];
 	double phi[MAX_PART];
 	double Ef[MAX_PART];

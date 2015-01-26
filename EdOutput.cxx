@@ -13,7 +13,7 @@ EdOutput::EdOutput(EdInput *inp, const char *fileout){
     fTree = new TTree("h1", "HG Monte Carlo");
     fNevt    = ((double) inp->GetNevt());
     n_part = inp->GetNpart();
-    mass_beam = GetMassPid(inp->GetBeamPID());
+    pid_beam = inp->GetBeamPID();
 
     InitTree();
 
@@ -203,6 +203,12 @@ void  EdOutput::MakeFileA2(){
   char c_treeformat[30];
   fTree->GetEntry(1); // Get one entry for the particle Ids in the final state
 
+  TDatabasePDG *pdg;
+  TParticlePDG *part_pdg;
+
+  pdg = new TDatabasePDG();
+  pdg->ReadPDGTable("eg_pdg_table.txt");
+
 
   a2Tree->Branch("X_vtx", &X_vtx, "X_vtx/F");
   a2Tree->Branch("Y_vtx", &Y_vtx, "Y_vtx/F");
@@ -214,7 +220,7 @@ void  EdOutput::MakeFileA2(){
   a2Tree->Branch("En_bm", &En_bm, "En_bm/F");
   for (int j=0; j<n_part; j++) {
     if (towrite[j] == 1) {
-      G3_pid = GetG3Pid(particle_id[j]);
+      G3_pid = pdg->ConvertPdgToGeant3(particle_id[j]) ;
       printf("Particle id = %i G3pid= %i\n",particle_id[j],G3_pid);
       sprintf(c_treename,"Px_%02i%02i",part_at,G3_pid);
       sprintf(c_treeformat,"Px_%02i%02i/F",part_at,G3_pid);
@@ -237,7 +243,8 @@ void  EdOutput::MakeFileA2(){
   }
 
   TRandom2 *PcosRandom = new TRandom2(0);
-	
+  part_pdg = pdg->GetParticle(pid_beam);
+  float mass_beam = part_pdg->Mass(); // mass in GeV
   
   Int_t nentries = (Int_t)fTree->GetEntries();
 
