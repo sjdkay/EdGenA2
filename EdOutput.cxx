@@ -13,6 +13,7 @@ EdOutput::EdOutput(EdInput *inp, const char *fileout){
     fTree = new TTree("h1", "HG Monte Carlo");
     fNevt    = ((double) inp->GetNevt());
     n_part = inp->GetNpart();
+    mass_beam = GetMassPid(inp->GetBeamPID());
 
     InitTree();
 
@@ -174,4 +175,115 @@ void EdOutput::Close(){
     return;
 }
 
+void  EdOutput::MakeFileA2(){
+
+
+  
+
+  TString file(fOutName);
+  file.ReplaceAll(".root","A2.root"); 
+
+  TFile *a2Outfile;
+  TTree *a2Tree;
+
+  printf("CREATING A2 OUTPUT FILE \n A2 output file set as %s\n", file.Data());
+  printf("NB: The momentum of incoming beam is distributed also in momentum direction for the A2 simulations. This is not present in the current generator and is added at this step for consistency for previous generator used for A2. This info is not present in the current default output from the generator and this distribution is generated following a Gaussian distribution with Gamma=1e-3\n");
+  
+  a2Tree = new TTree("h1", "HG Monte Carlo");
+
+  a2Outfile = new TFile(file.Data(), "RECREATE");
+
+
+  Float_t X_vtx,Y_vtx,Z_vtx;
+  Float_t Px_bm,Py_bm,Pz_bm,Pt_bm,En_bm;
+  Float_t Px_v[MAX_PART],Py_v[MAX_PART],Pz_v[MAX_PART],Pt_v[MAX_PART],En_v[MAX_PART];
+  Int_t G3_pid;
+  int part_at = 1;
+  char c_treename[30];
+  char c_treeformat[30];
+  fTree->GetEntry(1); // Get one entry for the particle Ids in the final state
+
+
+  a2Tree->Branch("X_vtx", &X_vtx, "X_vtx/F");
+  a2Tree->Branch("Y_vtx", &Y_vtx, "Y_vtx/F");
+  a2Tree->Branch("Z_vtx", &Z_vtx, "Z_vtx/F");
+  a2Tree->Branch("Px_bm", &Px_bm, "Px_bm/F");
+  a2Tree->Branch("Py_bm", &Py_bm, "Py_bm/F");
+  a2Tree->Branch("Pz_bm", &Pz_bm, "Pz_bm/F");
+  a2Tree->Branch("Pt_bm", &Pt_bm, "Pt_bm/F");
+  a2Tree->Branch("En_bm", &En_bm, "En_bm/F");
+  for (int j=0; j<n_part; j++) {
+    if (towrite[j] == 1) {
+      G3_pid = GetG3Pid(particle_id[j]);
+      printf("Particle id = %i G3pid= %i\n",particle_id[j],G3_pid);
+      sprintf(c_treename,"Px_%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"Px_%02i%02i/F",part_at,G3_pid);
+      a2Tree->Branch(c_treename, &Px_v[j], c_treeformat);
+      sprintf(c_treename,"Py_%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"Py_%02i%02i/F",part_at,G3_pid);
+      a2Tree->Branch(c_treename, &Py_v[j], c_treeformat);
+      sprintf(c_treename,"Pz_%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"Pz_%02i%02i/F",part_at,G3_pid);
+      a2Tree->Branch(c_treename, &Pz_v[j], c_treeformat);
+      sprintf(c_treename,"Pt_%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"Pt_%02i%02i/F",part_at,G3_pid);
+      a2Tree->Branch(c_treename, &Pt_v[j], c_treeformat);
+      sprintf(c_treename,"En_%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"En_%02i%02i/F",part_at,G3_pid);
+      a2Tree->Branch(c_treename, &En_v[j], c_treeformat);
+
+      part_at++;
+    }
+  }
+
+  TRandom2 *PcosRandom = new TRandom2(0);
+	
+  
+  Int_t nentries = (Int_t)fTree->GetEntries();
+
+
+
+  for (int i=0; i<nentries ; i++) {
+    fTree->GetEntry(i);
+    if(i % 1000000 == 0 ){
+      printf("Analyzed %09d events of total %09d \n",i,nentries);
+    }
+    X_vtx = vx[0]*100.0;
+    Y_vtx = vy[0]*100.0;
+    Z_vtx = vz[0]*100.0;
+    Px_bm = float(PcosRandom->Gaus(0.,0.001));
+    Py_bm = float(PcosRandom->Gaus(0.,0.001));
+    Pz_bm = pow(1.-pow(Px_bm,2)-pow(Py_bm,2),0.5);
+    En_bm = Ein;
+    if (Ein > mass_beam) Pt_bm = pow(pow(Ein,2)-pow(mass_beam,2),0.5);
+    else Pt_bm = 0.0;
+
+    for (int j=0; j<n_part; j++) {
+      if (towrite[j] == 1) {
+	if (pf[j] > 0.) {
+	  Px_v[j] = px[j]/pf[j];
+	  Py_v[j] = py[j]/pf[j];
+	  Pz_v[j] = pz[j]/pf[j];
+	  Pt_v[j] = pf[j];
+	  En_v[j] = Ef[j];
+	}
+	else {
+	  Px_v[j] = 0.;
+	  Py_v[j] = 0.;
+	  Pz_v[j] = 0.;
+	  Pt_v[j] = 0.;
+	  En_v[j] = 0.;
+	}
+      }
+    }
+    a2Tree->Fill();
+  }
+
+  a2Tree->Write();
+  a2Outfile->Close();
+  delete a2Outfile;
+
+  return;
+
+}
 

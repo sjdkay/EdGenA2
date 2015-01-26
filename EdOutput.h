@@ -9,6 +9,7 @@
 #include "TTree.h"
 #include "TString.h"
 #include "TChain.h"
+#include "TRandom2.h"
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -200,6 +201,7 @@ class EdOutput {
 
 	void Write();
 	void Close();
+	void MakeFileA2();	
 	void SetTheta( double *, int);
 	void SetPhi(double *, int);
 	void SetEf(double *, int);
@@ -223,13 +225,22 @@ class EdOutput {
 	void Setweight(double *, int);
 	void Settowrite(int *, int);
 
-	inline Double_t GetIonMass( Int_t ipdg )
+	inline Int_t GetG3Pid( Int_t ipdg )
+	{
+	  for( Int_t i=0;;i++ ){
+	    if( kG3toPDGions[i].iPDG == ENullPDG ) return 0;
+	    if( kG3toPDGions[i].iPDG == ipdg ) return kG3toPDGions[i].iG3;
+	  }
+	}
+
+	inline Float_t GetMassPid( Int_t ipdg )
 	{
 	  for( Int_t i=0;;i++ ){
 	    if( kG3toPDGions[i].iPDG == ENullPDG ) return 0.0;
 	    if( kG3toPDGions[i].iPDG == ipdg ) return kG3toPDGions[i].Mass;
 	  }
 	}
+
 
     private:
 	void InitTree();
@@ -244,6 +255,7 @@ class EdOutput {
 	int towrite[MAX_PART];
 
 	int n_part;
+	Float_t mass_beam;
 	double theta[MAX_PART];
 	double phi[MAX_PART];
 	double Ef[MAX_PART];
