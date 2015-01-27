@@ -14,6 +14,8 @@ EdOutput::EdOutput(EdInput *inp, const char *fileout){
     fNevt    = ((double) inp->GetNevt());
     n_part = inp->GetNpart();
     pid_beam = inp->GetBeamPID();
+    beam_s_cosx = inp->GetSigBeamX();
+    beam_s_cosy = inp->GetSigBeamY();
 
     InitTree();
 
@@ -187,7 +189,7 @@ void  EdOutput::MakeFileA2(){
   TTree *a2Tree;
 
   printf("CREATING A2 OUTPUT FILE \n A2 output file set as %s\n", file.Data());
-  printf("NB: The momentum of incoming beam is distributed also in momentum direction for the A2 simulations. This is not present in the current generator and is added at this step for consistency for previous generator used for A2. This info is not present in the current default output from the generator and this distribution is generated following a Gaussian distribution with Gamma=1e-3\n");
+  printf("NB: The momentum of incoming beam is distributed also in momentum direction for the A2 simulations. This is not present in the current generator and is added at this step for consistency for previous generator used for A2. This info is not present in the current default output from the generator and this distribution is generated following a Gaussian distribution with Gamma decided with the input flags b_s_cosx (%.2e cm) and b_s_cosy (%.2e cm) \n",beam_s_cosx,beam_s_cosy);
   
   a2Tree = new TTree("h1", "HG Monte Carlo");
 
@@ -258,8 +260,8 @@ void  EdOutput::MakeFileA2(){
     X_vtx = vx[0]*100.0;
     Y_vtx = vy[0]*100.0;
     Z_vtx = vz[0]*100.0;
-    Px_bm = float(PcosRandom->Gaus(0.,0.001));
-    Py_bm = float(PcosRandom->Gaus(0.,0.001));
+    Px_bm = float(PcosRandom->Gaus(0.,beam_s_cosx));
+    Py_bm = float(PcosRandom->Gaus(0.,beam_s_cosy));
     Pz_bm = pow(1.-pow(Px_bm,2)-pow(Py_bm,2),0.5);
     En_bm = Ein;
     if (Ein > mass_beam) Pt_bm = pow(pow(Ein,2)-pow(mass_beam,2),0.5);

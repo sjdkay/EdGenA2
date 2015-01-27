@@ -76,6 +76,8 @@ class EdOutput {
 
 	int n_part;
 	int pid_beam;
+	double beam_s_cosx;
+	double beam_s_cosy;
 	double theta[MAX_PART];
 	double phi[MAX_PART];
 	double Ef[MAX_PART];

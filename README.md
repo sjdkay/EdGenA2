@@ -1,4 +1,4 @@
-EdGen Event Generator
+EdGenA2 Event Generator
 ==================
 
 This code is for an Event Generator for the A2 collaboration.
@@ -14,7 +14,7 @@ Prerequisites
 Install
 -------
 This version is running correctly on ifarm.jlab.org. The version of cmake there is too old, so, just use /work/halla/parity/disk2/zana/Cmake/cmake-2.8.8/bin/cmake rather than the default cmake.
-* cd EdGen (go to the EdGen directory)
+* cd EdGenA2 (go to the EdGenA2 directory)
 * mkdir build
 * cd build
 * cmake ../ ( at jlab /work/halla/parity/disk2/zana/Cmake/cmake-2.8.8/bin/cmake ../ )
@@ -22,12 +22,12 @@ This version is running correctly on ifarm.jlab.org. The version of cmake there 
 
 Running
 -------
-* cd EdGen/output (go to the output directory)
+* cd EdGenA2/output (go to the output directory)
 * A table with particle properties is in this directory (from PDG) eg_pdg_table.txt :Modify it if you need it. An example of how to add particles to this table are written at the end of the file. At now the information used are just the mass, the charge of the particle and the lifetime (if the particle has vertex in your reaction diagram for this MonteCarlo. 
 * A template is in input.dat (input_test.dat it is just for my developments at now), and modify the file to fit your reaction
 * In input.dat one can specify the input spetrum (for example for CLAS photon beam). The input spectrum file is written in a txt files format with raw that represent for each bin E_min, E_max, Counts (Does not need to be normalize, the code is going to normalize it if need it). The bin size do not need to be the same for each bin.  An example is written in the output directory as energy.txt 
-* ./EdGen -h will give you the options
-* ./EdGen -i input.dat -o output.root        (Change input.dat or output.root (need to be a *.root) to your desired input and output file format 
+* ./EdGenA2 -h will give you the options
+* ./EdGenA2 -i input.dat -o output.root        (Change input.dat or output.root (need to be a *.root) to your desired input and output file format 
   
 Input file
 ----------
@@ -65,3 +65,4 @@ Models
 output
 -------
 * 1  ROOT only
+* 2  ROOT + A2 SIM format

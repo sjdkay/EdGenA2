@@ -24,6 +24,8 @@ struct inputdata {
     double length;
     double lenx;
     double leny;
+    double sigx;
+    double sigy;
  
     double theta_min;
     double theta_max;
@@ -51,6 +53,8 @@ class EdInput{
 	int    GetMassModel(){ return fData.mass_model; }
       TString  GetIfile(){ return fData.ifile; }
 	int    GetBeamPID(){ return fData.beam_pid; }
+	double GetSigBeamX(){ return fData.sigx; }
+	double GetSigBeamY(){ return fData.sigy; }
 	int    GetNvertex(){ return fData.nvertex; }
 	int    GetOvert(int i){ return fData.overt[i]; }
 	int    GetNpvert(int i){ return fData.npvert[i]; }
