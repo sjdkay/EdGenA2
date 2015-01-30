@@ -224,20 +224,20 @@ void  EdOutput::MakeFileA2(){
     if (towrite[j] == 1) {
       G3_pid = pdg->ConvertPdgToGeant3(particle_id[j]) ;
       printf("Particle id = %i G3pid= %i\n",particle_id[j],G3_pid);
-      sprintf(c_treename,"Px_%02i%02i",part_at,G3_pid);
-      sprintf(c_treeformat,"Px_%02i%02i/F",part_at,G3_pid);
+      sprintf(c_treename,"Px_l%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"Px_l%02i%02i/F",part_at,G3_pid);
       a2Tree->Branch(c_treename, &Px_v[j], c_treeformat);
-      sprintf(c_treename,"Py_%02i%02i",part_at,G3_pid);
-      sprintf(c_treeformat,"Py_%02i%02i/F",part_at,G3_pid);
+      sprintf(c_treename,"Py_l%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"Py_l%02i%02i/F",part_at,G3_pid);
       a2Tree->Branch(c_treename, &Py_v[j], c_treeformat);
-      sprintf(c_treename,"Pz_%02i%02i",part_at,G3_pid);
-      sprintf(c_treeformat,"Pz_%02i%02i/F",part_at,G3_pid);
+      sprintf(c_treename,"Pz_l%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"Pz_l%02i%02i/F",part_at,G3_pid);
       a2Tree->Branch(c_treename, &Pz_v[j], c_treeformat);
-      sprintf(c_treename,"Pt_%02i%02i",part_at,G3_pid);
-      sprintf(c_treeformat,"Pt_%02i%02i/F",part_at,G3_pid);
+      sprintf(c_treename,"Pt_l%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"Pt_l%02i%02i/F",part_at,G3_pid);
       a2Tree->Branch(c_treename, &Pt_v[j], c_treeformat);
-      sprintf(c_treename,"En_%02i%02i",part_at,G3_pid);
-      sprintf(c_treeformat,"En_%02i%02i/F",part_at,G3_pid);
+      sprintf(c_treename,"En_l%02i%02i",part_at,G3_pid);
+      sprintf(c_treeformat,"En_l%02i%02i/F",part_at,G3_pid);
       a2Tree->Branch(c_treename, &En_v[j], c_treeformat);
 
       part_at++;
