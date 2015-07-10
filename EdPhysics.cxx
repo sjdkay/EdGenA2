@@ -76,6 +76,8 @@ EdPhysics::~EdPhysics(){
 void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
   // target info
 
+  // Energy of the PHOTON BEAM is sometimes below the threshold of the pi0 mass. The random generator is constant in generation, so the 26-th event is the one with energy below the threshold. This could be also the problem with the multiple particle vertex one, since with multiple particle I require more energy in the final state. I should try to put a single beam with really high energy and check if ken hicks simulation works.
+
     double  e_lab = model->GetEnergy();
     out->SetEin(e_lab);
     beam.SetPxPyPzE(0.0, 0.0,e_lab,e_lab);
