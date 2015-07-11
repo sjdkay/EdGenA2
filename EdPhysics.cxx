@@ -78,9 +78,9 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
 
   // Energy of the PHOTON BEAM is sometimes below the threshold of the pi0 mass. The random generator is constant in generation, so the 26-th event is the one with energy below the threshold. This could be also the problem with the multiple particle vertex one, since with multiple particle I require more energy in the final state. I should try to put a single beam with really high energy and check if ken hicks simulation works.
 
-    double  e_lab = model->GetEnergy();
-    out->SetEin(e_lab);
-    beam.SetPxPyPzE(0.0, 0.0,e_lab,e_lab);
+    // double  e_lab = model->GetEnergy();
+    // out->SetEin(e_lab);
+    // beam.SetPxPyPzE(0.0, 0.0,e_lab,e_lab);
     double tglx = model->GetLx();
     double tgly = model->GetLy();
     double tglength = model->GetLength();
@@ -113,8 +113,8 @@ void EdPhysics::MakeEvent(EdOutput *out , EdModel *model){
     vertex.SetXYZ(pos_x,pos_y,pos_z);
     vertex = vertex + tgtoff;
     int test_gen = 0;
-    while (test_gen < nvertex ) test_gen = Gen_Phasespace();
-
+    while (test_gen < nvertex ) test_gen = Gen_Phasespace(model);
+    out->SetEin(e_lab);
     out->SetTheta(theta,n_part);
     out->SetPhi(phi,n_part);
     out->SetEf(Ef,n_part);
@@ -195,13 +195,23 @@ TVector3 EdPhysics::Decay_vertex(TLorentzVector *Vp_4, int i, TVector3 vert) {
 
 }
 
-int EdPhysics::Gen_Mass(int i) {
+int EdPhysics::Gen_Mass(int i,EdModel *model) {
   // need to put all values of val_mass[i][j]with this function. The return integer is in case the generation is correct (could be a loop with while ( output < npvert[i] ) In this way I can generate all masses according to the value here generated. Also the order of generation, considering the limit should be random.
   double prob[10];
   fRandom->RndmArray(npvert[i],prob);
   int good_gen = 1;
   int k;
   double total_gen = 0.;
+  e_lab = model->GetEnergy();
+  beam.SetPxPyPzE(0.0, 0.0,e_lab,e_lab);
+  //  printf("Energy = %f \n",e_lab);
+  if (overt[i] == 0) { // (Origin Beam + Tg)
+    Wtg = beam + target;
+  }
+  else {
+    Wtg = *p4vector[overt[i]-1];
+  }
+
   for (int j=0; j<npvert[i] ; j++) {
     k = (int)TMath::LocMin(npvert[i],prob);
     if (width[i][k] > 0.001) {
@@ -222,14 +232,15 @@ int EdPhysics::Gen_Mass(int i) {
       total_gen = total_gen + val_mass[i][k] ; 
     }
   }  // Take away from the mass the stable particle
+  //  printf("good_gen = %d \n",good_gen);
   return good_gen; 
 }
 
 
-int EdPhysics::Gen_Phasespace(){
+int EdPhysics::Gen_Phasespace(EdModel *model){
 
       //    if (valid_event>0) printf("valid events =%i but nvertex=%i",valid_event,nvertex);
-  TLorentzVector *p4vector[n_part+1];
+  // TLorentzVector *p4vector[n_part+1];
   double weight2;
   double total_mass;
   int atpart = 0;
@@ -237,15 +248,11 @@ int EdPhysics::Gen_Phasespace(){
   int good_mass = 0; 
   int failed_event = 0;
   valid_event = 0;
+
+
   for (int i=0; i<nvertex; i++) {
-    if (overt[i] == 0) { // (Origin Beam + Tg)
-      Wtg = beam + target;
-    }
-    else {
-      Wtg = *p4vector[overt[i]-1];
-    }
     good_mass=0;
-    while (good_mass == 0) good_mass = Gen_Mass(i); 
+    while (good_mass == 0) good_mass = Gen_Mass(i,model); 
     total_mass = 0.;
     for (int j=0; j<npvert[i]; j++) {
       // val_mass[i][j] = -1.;
@@ -254,9 +261,9 @@ int EdPhysics::Gen_Phasespace(){
       // }
       // else val_mass[i][j] = masses[i][j];
       total_mass = total_mass + val_mass[i][j];
-      //     printf("mass vertex %i particle %i total=%.3e mass=%.3e max_mass%.3e \n",i,j,total_mass,val_mass[i][j],max_mass[i][j]);
+      //      printf("mass vertex %i particle %i total=%.3e mass=%.3e max_mass%.3e \n",i,j,total_mass,val_mass[i][j],max_mass[i][j]);
     }
-    if (Wtg.M() < total_mass) good_mass = Gen_Mass(i);
+    // if (Wtg.M() < total_mass) good_mass = Gen_Mass(i);
     //    printf("mass generated Wtg=%.3e total=%.3e good_mass=%i \n",Wtg.M(),total_mass,good_mass);      
     if (Wtg.M() > total_mass) { // mass check at each vertex
       //   printf("mass generated\n");
