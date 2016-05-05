@@ -1,7 +1,7 @@
 {
-  TChain *mc_edgen = new TChain("h1");
+  TChain *mc_edgen = new TChain("T");
   mc_edgen->Add("output.root");
-  mc_edgen->MakeSelector("new_analysis");
+  mc_edgen->MakeSelector("analysis_mytest");
 
 
 }

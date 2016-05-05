@@ -9,7 +9,12 @@ struct inputdata {
     int    nprnt;
     int    model;
     int    mass_model;
-   TString ifile;
+  TString ifile;  //input spectrum for beam
+  TString qf_file; //input fermi momentum distribution file 
+  TString qf_fermi; //input fermi momentum distribution histogram
+  int isqf; //is the target quasifree?
+  int qftpdg;  //pdg number of qf target
+  int qfspdg;  //pdg number of quasifree spectator
     int    npart; // total number of particles involved
     int    nvertex; // total number of vertexes
     int    npvert[10]; // total number of particle at one vertex
@@ -27,8 +32,8 @@ struct inputdata {
     double sigx;
     double sigy;
  
-    double theta_min;
-    double theta_max;
+    double theta_min[100];
+    double theta_max[100];
 
     int    tg_Z;
     int    tg_N;
@@ -52,6 +57,10 @@ class EdInput{
 	int    GetModel(){ return fData.model; }
 	int    GetMassModel(){ return fData.mass_model; }
       TString  GetIfile(){ return fData.ifile; }
+      TString  GetQFFile(){ return fData.qf_file; }
+      TString  GetQFFermi(){ return fData.qf_fermi; }
+      int IsQF(){return fData.isqf;}
+      inputdata GetInData(){return fData;}
 	int    GetBeamPID(){ return fData.beam_pid; }
 	double GetSigBeamX(){ return fData.sigx; }
 	double GetSigBeamY(){ return fData.sigy; }
@@ -70,8 +79,8 @@ class EdInput{
 	double Get_lenx(){ return fData.lenx; }
 	double Get_leny(){ return fData.leny; }
 	int    Get_fmt(){ return fData.out_fmt; }
-	double Get_thetaMin(){ return fData.theta_min; }
-	double Get_thetaMax(){ return fData.theta_max; }
+	double Get_thetaMin(int i){ return fData.theta_min[i]; }
+	double Get_thetaMax(int i){ return fData.theta_max[i]; }
 
 	double GetTgtXoff(){ return fData.off_x; }
 	double GetTgtYoff(){ return fData.off_y; }

@@ -1,6 +1,13 @@
 #include "EdModel.h"
+#include "TFile.h"
+#include "TDirectory.h"
+#include <iostream>
 
 EdModel::EdModel(EdInput *inp){
+  fInp=inp;
+  fFermiMomentum=0;
+  fIsQF=kFALSE;
+  H1_spec=0;
 
     if( inp ){
       int tot_part = 100;
@@ -36,11 +43,13 @@ EdModel::EdModel(EdInput *inp){
 	tg_N = inp->Get_tg_N();
 	tg_mass = inp->Get_tg_mass();
 	energy = inp->Get_eEnergy();
-	theta_min = inp->Get_thetaMin();
-	theta_max = inp->Get_thetaMax();
 	npart = inp->GetNpart();
 	tot_part = npart;
-	for (int i=0; i<tot_part; i++) pid[i] = inp->GetPid(i);
+	for (int i=0; i<tot_part; i++) {
+	  pid[i] = inp->GetPid(i);
+	  theta_min[i] = inp->Get_thetaMin(i);
+	  theta_max[i] = inp->Get_thetaMax(i);
+	}
 	nvertex = inp->GetNvertex();
 	tot_part = nvertex;
 	for (int i=0; i<tot_part; i++) {
@@ -53,8 +62,24 @@ EdModel::EdModel(EdInput *inp){
 		       inp->GetTgtYoff(),
 		       inp->GetTgtZoff() );
 
+	if(inp->IsQF()){
+	  // Get Fermi Momentum Distribution
+	  TDirectory* savedir=gDirectory;//standard ROOT hack for not losing newly created objects when close file
+	  TFile* fermidat = new TFile(inp->GetQFFile());
+	  savedir->cd();
+	  if(!fermidat->IsOpen()) std::cerr<<"EdModel::EdModel(EdInput *inp) : No Quasi Free file found = "<<inp->GetQFFile()<<std::endl;
+	  else {
+	    std::cout << "QF distribution : " << inp->GetQFFermi()<<std::endl;
+	    fFermiMomentum  = (TH1F*)fermidat->Get(inp->GetQFFermi())->Clone("hFermi");
+	    if(!fFermiMomentum){ std::cout<<"Did not find "<<inp->GetQFFermi()<<" in "<<inp->GetQFFile()<<std::endl; exit(-1);}
+	  }
+	  if(fFermiMomentum)   fIsQF=kTRUE;
+	  fermidat->Close();
+	  delete fermidat;
+	  
+	}
     }
-
+    
     length = length / 100. ; // conversion distances in m
     len_x = len_x / 100. ; 
     len_y = len_y / 100. ; 
@@ -64,7 +89,9 @@ EdModel::EdModel(EdInput *inp){
 }
 
 EdModel::~EdModel(){
-    return;
+  if(H1_spec) delete H1_spec;
+  if(fFermiMomentum) delete fFermiMomentum;
+  return;
 }
 
 
@@ -88,3 +115,4 @@ const char * EdModel::GetMassModelString(){
   else return "Sorry: No mass model supported. Check your input file";
 
 }
+

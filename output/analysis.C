@@ -45,11 +45,39 @@ void analysis::SlaveBegin(TTree * /*tree*/)
    // The tree argument is deprecated (on PROOF 0 is passed).
 
    TString option = GetOption();
-   h1_vz =  new TH1F("h1_vz","Vertex Z for the proton",100,-5,5);
-   h1_E = new TH1F("h1_E","Energy spectrum for the proton",100,0.,2.);
+   
+   h1_phi = new TH1F("h1_phi","#phi #pi^{+} distribution",150,-180,360);
+   h1_costheta = new TH1F("h1_costheta","cos(#theta) #pi^{+} distribution (f^{1} rest frame)",100,-1.,1.);
+   h1_mass = new TH1F("h1_mass_f1","Mass; GeV",100,0.,1.5);
+   h1_mass_eta = new TH1F("h1_mass_eta","Mass #eta; GeV",100,0.,1.5);
+   h1_costheta2 = new TH1F("h1_costheta2","cos(#theta) f^{1} distribution",100,-1.,1.);
+   h1_theta_pim = new TH1F("h1_theta_pim","#theta #pi^{-} distribution",100,0.0,TMath::Pi());
+   h1_mass2 = new TH1F("h1_mass_f1_2"," f1 as mass of #pi^{+}+#pi^{-}+#eta; GeV",100,0.,1.5);
+   h1_beam_sel = new TH1F("h1_beam_sel","E_beam for M_{f1} > 1.2GeV  ; GeV",100,0.,4.5);
+   h1_beam_sel2 = new TH1F("h1_beam_sel2","E_beam for M_{f1} > 1.2GeV  ; GeV",100,0.,4.5);
+   h1_mom_sel = new TH1F("h1_mom_sel","p|_{#pi^{-} #eta} for M_{f1} > 1.2GeV  ; GeV",100,0.,1.0);
+   h1_mom_sel2 = new TH1F("h1_mom_sel2","|p|_{#pi^{-} #eta} for M_{f1} > 1.2GeV  ; GeV",100,0.,1.0);
+   h1_Ebeam = new TH1F("h1_Ebeam","E_beam weighted  ; GeV",100,0.,4.5);
 
-   fOutput->Add(h1_vz);
-   fOutput->Add(h1_E);
+
+   h2_pimeta_pipeta = new TH2F("h2_pimeta_pipeta","Dalitz ;#pi^{-}#eta;#pi^{+}#eta",100,0.,1.5,100,0.,1.5);
+   h2_pimeta_pipeta2 = new TH2F("h2_pimeta_pipeta2","Dalitz M_{f1} > 1.2GeV  ;#pi^{-}#eta;#pi^{+}#eta",100,0.,1.5,100,0.,1.5);
+
+   fOutput->Add(h1_phi);
+   fOutput->Add(h1_costheta);
+   fOutput->Add(h1_mass);
+   fOutput->Add(h1_mass_eta);
+   fOutput->Add(h1_mass2);
+   fOutput->Add(h1_costheta2);
+   fOutput->Add(h1_theta_pim);
+   fOutput->Add(h1_beam_sel);
+   fOutput->Add(h1_beam_sel2);
+   fOutput->Add(h1_mom_sel);
+   fOutput->Add(h1_mom_sel2);
+   fOutput->Add(h1_Ebeam);
+   fOutput->Add(h2_pimeta_pipeta);
+   fOutput->Add(h2_pimeta_pipeta2);
+
 }
 
 Bool_t analysis::Process(Long64_t entry)
@@ -72,14 +100,50 @@ Bool_t analysis::Process(Long64_t entry)
    //
    // The return value is currently not used.
 
-  b_pf->GetEntry(entry);
-  b_vx->GetEntry(entry);
-  b_vy->GetEntry(entry);
-  b_vz->GetEntry(entry);
+  b_Ef->GetEntry(entry);
+  b_px->GetEntry(entry);
+  b_py->GetEntry(entry);
+  b_pz->GetEntry(entry);
+  b_weight->GetEntry(entry);
+  b_Ein_beam->GetEntry(entry);
 
-  h1_vz->Fill(vz[0]);
-  h1_E->Fill(pf[0]);
+  TLorentzVector p_f1(px[1],py[1],pz[1],Ef[1]);
+  TLorentzVector p_pip(px[2],py[2],pz[2],Ef[2]);
+  TLorentzVector p_pim(px[3],py[3],pz[3],Ef[3]);
+  TLorentzVector p_eta(px[4],py[4],pz[4],Ef[4]);
 
+  TLorentzVector p_d1 = p_pim+p_eta;
+  TLorentzVector p_d2 = p_pip+p_eta;
+  
+  TVector3 b_3 ;
+  b_3 =  p_f1.BoostVector();
+  b_3 = -b_3;
+  TLorentzVector p_f1_2 = p_pip+p_pim+p_eta;
+  p_pip.Boost(b_3);
+
+  h1_Ebeam->Fill(Ein_beam,weight[4]);
+  h1_phi->Fill(p_pip.Phi()/TMath::Pi()*180.);
+  h1_costheta->Fill(p_pip.CosTheta());
+  h1_mass->Fill(p_f1.M());
+  h1_mass_eta->Fill(p_eta.M());
+  h1_mass2->Fill(p_f1_2.M());
+  h1_costheta2->Fill(p_f1.CosTheta());
+  h1_theta_pim->Fill(p_pim.Theta());
+  h2_pimeta_pipeta->Fill(p_d1.M2(),p_d2.M2(),weight[4]);
+
+  p_d1.Boost(b_3);
+  p_d2.Boost(b_3);
+  if (p_f1.M()>1.22 ) {
+    h1_beam_sel->Fill(Ein_beam,weight[4]); 
+    h1_mom_sel->Fill(p_d1.Rho());
+  }
+  else {
+    h1_beam_sel2->Fill(Ein_beam); 
+    h1_mom_sel2->Fill(p_d1.Rho());
+  }
+  if ( p_f1.M()>1.2) {
+    h2_pimeta_pipeta2->Fill(p_d1.M2(),p_d2.M2(),weight[4]);
+  }
 
    return kTRUE;
 }
@@ -97,12 +161,11 @@ void analysis::Terminate()
    // The Terminate() function is the last function to be called during
    // a query. It always runs on the client, it can be used to present
    // the results graphically or save the results to file.
+
   TFile file_out("analysis_output.root","recreate");
   TList *outlist = GetOutputList();
   
   outlist->Write();
   file_out.Write();
   file_out.Close();
-
-
 }

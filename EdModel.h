@@ -26,8 +26,6 @@ class EdModel{
 	double GetEnergy();
 	const char * GetMassModelString();
 	double GetBeamPID() {return beam_pid;}
-	double GetTheta_min() {return theta_min;}
-	double GetTheta_max() {return theta_max;}
 	//	char* GetInFileName() {return ifile.data()};
 	int    GetNpart() {return npart;}
 	int    GetPhModel() {return ph_model;}
@@ -40,8 +38,12 @@ class EdModel{
 	int    GetDvert(int i, int j){ return dvert[i][j]; }
 	int    GetV_type(int i){ return v_type[i]; }
 	int    GetV_ratio(int i){ return v_ratio[i]; }
-
-    private:
+	double GetTheta_min(int i) {return theta_min[i];}
+	double GetTheta_max(int i) {return theta_max[i];}
+	Bool_t IsQF() {return fIsQF;}
+	TH1F* GetFermi(){return fFermiMomentum;}
+	EdInput* GetInput(){return fInp;}
+   private:
 	double length;
 	double len_x;
 	double len_y;
@@ -53,8 +55,8 @@ class EdModel{
 	TString ifile;
 	double energy;
 	int    beam_pid;
-	double theta_min;
-	double theta_max;
+	double theta_min[100];
+	double theta_max[100];
 	int    pid[100];
 	int    npart;
 	int    nvertex; // total number of vertexes
@@ -65,5 +67,9 @@ class EdModel{
 	double v_ratio[10]; // ration to be applied to vertex
 	TVector3 offset;
 	TH1F   *H1_spec;
+	TH1F* fFermiMomentum; //possible fermi momentum distribution for qf target
+	Bool_t fIsQF;  //Check if QuasiFree model
+	EdInput* fInp; //Saves having to duplicate getter functions....
+
 };
 #endif//__EdModel_h

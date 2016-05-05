@@ -9,7 +9,7 @@
 #include "TF2.h"
 #include "TF1.h"
 #include "TVector3.h"
-#include "TGenPhaseSpace.h"
+#include "EdGenPhaseSpace.h"
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
 #include "TRandom2.h"
@@ -18,7 +18,7 @@
 
 using namespace std;
 
-class EdPhysics: public TGenPhaseSpace{
+class EdPhysics: public EdGenPhaseSpace{
     public:
 	EdPhysics(EdModel *);
 	~EdPhysics();
@@ -36,7 +36,9 @@ class EdPhysics: public TGenPhaseSpace{
 	double v_ratio[10]; // ration to be applied to vertex
 	TDatabasePDG *pdg;
 	TParticlePDG *part_pdg[MAX_PART];
-	TLorentzVector *p4vector[MAX_PART];
+	TLorentzVector *p4vector[MAX_PART][MAX_PART];
+	TLorentzVector *p4vector_c;
+
 
 	double theta[MAX_PART];
 	double phi[MAX_PART];
@@ -68,18 +70,31 @@ class EdPhysics: public TGenPhaseSpace{
 	int distr_mass[10][10];
 	double max_mass[10][10];
 	TRandom2 *fRandom;
+	TRandom2 *gRandom;
 	TLorentzVector Wtg;
 	TLorentzVector beam;
 	TLorentzVector target;
+	TLorentzVector spectator;
 	TLorentzVector W4vector;
 	TLorentzVector Q4vector;
 	TVector3 vertex;
+	double theta_min[MAX_PART];
+	double theta_max[MAX_PART];
+	int count_phase;
 
 	TVector3 Decay_vertex(TLorentzVector *Vp_4, int i, TVector3 vert);
 	double GetBeamProfile( double sigma = 1.);
 	int Gen_Phasespace(EdModel *model);
 	int Gen_Mass(int i,EdModel *model);
+	void QFTarget(EdModel *model);  //calculate quasi free target with fermi momentum
 
+	double t_reaction(TLorentzVector *Vrecoil_tg_4 );
+	double phi_meson();
+	double theta_meson();
+	double phi_3decay();
+	double theta_3decay();
+	double phi_2decay();
+	double theta_2decay();
 	 
 };
 #endif//__EdPhysics_h

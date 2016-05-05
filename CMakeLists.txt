@@ -17,6 +17,7 @@ file(GLOB sources
   ${PROJECT_SOURCE_DIR}/EdOutput.cxx
   ${PROJECT_SOURCE_DIR}/EdPhysics.cxx
   ${PROJECT_SOURCE_DIR}/EdProcess.cxx
+  ${PROJECT_SOURCE_DIR}/EdGenPhaseSpace.cxx
   )
 file(GLOB headers 
   ${PROJECT_SOURCE_DIR}/EdGen.h
@@ -25,6 +26,8 @@ file(GLOB headers
   ${PROJECT_SOURCE_DIR}/EdOutput.h
   ${PROJECT_SOURCE_DIR}/EdPhysics.h
   ${PROJECT_SOURCE_DIR}/EdProcess.h
+  ${PROJECT_SOURCE_DIR}/EdGenPhaseSpace.h
+
   )
 
 link_directories( ${LINK_DIRECTORIES})

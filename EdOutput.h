@@ -1,6 +1,9 @@
 #ifndef __EdOutput_h
 #define __EdOutput_h
 
+// UNCOMMENT THE FOLLOWING LINES IF YOU WANT TO HAVE BOS OUTPUT
+//#define CLAS6LIB
+//
 
 #include "EdInput.h"
 
@@ -20,6 +23,13 @@
 
 #include <stdlib.h>
 #include <errno.h>
+#ifdef CLAS6LIB
+#include <ntypes.h>
+#include <sys/types.h>
+extern "C" {
+#include <bostypes.h>
+}
+#endif 
 #include <math.h>
 #include <time.h>
 
@@ -28,8 +38,11 @@
 #define MAX_PART 10
 using namespace std; 
 
-
-
+#ifdef CLAS6LIB
+extern"C" {
+  void close_fpack_unit(char *dataname);
+}
+#endif
 class EdOutput {
     public:
         EdOutput(EdInput *inp = 0, const char* fileout="output.root");
@@ -37,6 +50,8 @@ class EdOutput {
 
 	void Write();
 	void Close();
+	void MakeFileLUND();
+	void MakeFileBOS();
 	void MakeFileA2();	
 	void SetTheta( double *, int);
 	void SetPhi(double *, int);
@@ -61,7 +76,6 @@ class EdOutput {
 	void Setweight(double *, int);
 	void Settowrite(int *, int);
 
-
     private:
 	void InitTree();
 
@@ -71,6 +85,8 @@ class EdOutput {
 	TTree *fTree;
 
 	double fNevt;
+	int    fnvertex;
+	int    f1part[MAX_PART];
 
 	int towrite[MAX_PART];
 

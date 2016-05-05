@@ -8,8 +8,8 @@
 EdInput::EdInput(const char *file){
     printf("Reading %s for input\n", file);
 
-    char command[100];
-    char tmp[100];
+    std::string command;//dglazier, changed to string as char[] was screwing up 
+    std::string tmp;
     ifstream inputfile;
     inputfile.open(file, ifstream::in);
     if( !inputfile ) {
@@ -24,14 +24,16 @@ EdInput::EdInput(const char *file){
     int poscomma;
     int atvertex = 0;
     
+    fData.isqf=0;//default not a quasi free target
+
     while( !inputfile.eof() ){      //      c1 = inputfile.peek(); // read the first character , if it is a #, skip the line
-      inputfile.getline(command,100,delim);
+      //      inputfile.getline(command,100,delim);
+      std::getline(inputfile,command); //dglazier, use string version instead
       // printf("read command %s\n",command);
       valcommand = command;
       valc2 = valcommand(0,1);
       if (valc2.Contains("#")==false) {
-	
-	//	printf("%s \n",valcommand.Data());
+	//	printf("vv %s \n",valcommand.Data());
 	if (valcommand.Contains("nevt:")) {
 	  valcommand.ReplaceAll("nevt:","");
 	  valcommand.ReplaceAll(";","");
@@ -68,6 +70,26 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll("\t","");
 	  fData.ifile = valcommand.Strip();
 	  printf("Input file spectra from %s\n",fData.ifile.Data());
+	}
+	if (valcommand.Contains("qffile:")) {
+	  // printf("qfffile %s",valcommand.Data());
+	  valcommand.ReplaceAll("qffile:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("\n","");
+	  valcommand.ReplaceAll("\t","");
+	  fData.qf_file = TString(valcommand(0,valcommand.First(".")+5));
+	  fData.qf_fermi=TString(valcommand(valcommand.First(".")+5,valcommand.Sizeof()));
+	  fData.isqf=1;
+	  printf("Fermi momentum from %s\n",fData.qf_file.Data());
+	}
+	if (valcommand.Contains("qfpdg:")) {
+	  valcommand.ReplaceAll("qfpdg:","");
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll(" ","");
+	  fData.qftpdg = TString(valcommand(0,valcommand.First(","))).Atoi();
+	  fData.qfspdg = TString(valcommand(valcommand.First(",")+1,valcommand.Sizeof())).Atoi();
+	  printf("QuasiFree Target PDG: %d\n",fData.qftpdg);
 	}
 	if (valcommand.Contains("beam:")) {
 	  valcommand.ReplaceAll("beam:","");
@@ -117,7 +139,7 @@ EdInput::EdInput(const char *file){
 	if (valcommand.Contains("length:")) {
 	  valcommand.ReplaceAll("length:","");
 	  valcommand.ReplaceAll(";","");
-	  if (valcommand.Contains(" m")) factor = 0.01;
+	  if (valcommand.Contains(" m")) factor = 100.;
 	  else factor = 1;
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" m","");
@@ -129,7 +151,7 @@ EdInput::EdInput(const char *file){
 	if (valcommand.Contains("ras_x:")) {
 	  valcommand.ReplaceAll("ras_x:","");
 	  valcommand.ReplaceAll(";","");
-	  if (valcommand.Contains(" m")) factor = 0.01;
+	  if (valcommand.Contains(" m")) factor = 100.;
 	  else factor = 1;
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" m","");
@@ -141,7 +163,7 @@ EdInput::EdInput(const char *file){
 	if (valcommand.Contains("ras_y:")) {
 	  valcommand.ReplaceAll("ras_y:","");
 	  valcommand.ReplaceAll(";","");
-	  if (valcommand.Contains(" m")) factor = 0.01;
+	  if (valcommand.Contains(" m")) factor = 100.;
 	  else factor = 1;
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" m","");
@@ -174,8 +196,8 @@ EdInput::EdInput(const char *file){
 	  fData.sigy = factor*valcommand.Atof();
 	  printf("Beam  cosY distribution sigma: %.4f cm\n",fData.sigy);	  
 	}
-	if (valcommand.Contains("theta:")) {
-	  valcommand.ReplaceAll("theta:","");
+	if (valcommand.Contains("theta_min:")) {
+	  valcommand.ReplaceAll("theta_min:","");
 	  valcommand.ReplaceAll(";","");
 	  if (valcommand.Contains(" deg")) factor = 3.14/180;
 	  else factor = 1; //rad
@@ -183,16 +205,41 @@ EdInput::EdInput(const char *file){
 	  valcommand.ReplaceAll("deg","");
 	  valcommand.ReplaceAll(" ","");
 	  valcommand.ReplaceAll("rad","");
-	  valc2 = valcommand(0,valcommand.First(","));
-	  fData.theta_min = factor*valc2.Atof();
-	  valc2 = valcommand(valcommand.First(",")+1,valcommand.Length());
-	  fData.theta_max = factor*valc2.Atof();
-	  printf("Theta_min=%.2f ;  Theta_max=%.2f\n",fData.theta_min,fData.theta_max);	  
+	  printf("Theta min for particles: ");
+	  for (int i=0; i<fData.npart -1; i++) {
+	    poscomma = valcommand.First(",");
+	    valc2 = valcommand(0,poscomma);
+	    fData.theta_min[i] = factor*valc2.Atof();
+	    valcommand.Replace(0,poscomma+1,"");
+	    printf(" %f",fData.theta_min[i]);
+	  }
+	  fData.theta_min[fData.npart -1] = factor*valcommand.Atof();
+	  printf(" %f \n",fData.theta_min[fData.npart -1]);
+	}
+	if (valcommand.Contains("theta_max:")) {
+	  valcommand.ReplaceAll("theta_max:","");
+	  valcommand.ReplaceAll(";","");
+	  if (valcommand.Contains(" deg")) factor = 3.14/180;
+	  else factor = 1; //rad
+	  valcommand.ReplaceAll(";","");
+	  valcommand.ReplaceAll("deg","");
+	  valcommand.ReplaceAll(" ","");
+	  valcommand.ReplaceAll("rad","");
+	  printf("Theta min for particles: ");
+	  for (int i=0; i<fData.npart -1; i++) {
+	    poscomma = valcommand.First(",");
+	    valc2 = valcommand(0,poscomma);
+	    fData.theta_max[i] = factor*valc2.Atof();
+	    valcommand.Replace(0,poscomma+1,"");
+	    printf(" %f",fData.theta_max[i]);
+	  }
+	  fData.theta_max[fData.npart -1] = factor*valcommand.Atof();
+	  printf(" %f \n",fData.theta_max[fData.npart -1]);
 	}
 	if (valcommand.Contains("offset:")) {
 	  valcommand.ReplaceAll("offset:","");
 	  valcommand.ReplaceAll(";","");
-	  if (valcommand.Contains(" m")) factor = 0.01;
+	  if (valcommand.Contains(" m")) factor = 100.;
 	  else factor = 1; //rad
 	  valcommand.ReplaceAll(";","");
 	  valcommand.ReplaceAll(" m","");
@@ -276,7 +323,9 @@ EdInput::EdInput(const char *file){
     }
     if (atvertex!=fData.nvertex) printf("Number of reqeusted vertexes is %i, but format written for just %i vertexes\n",fData.npart, atvertex);
     inputfile.close();
-    printf("Finhed reading input file\n");
+    printf("Finished reading input file\n");
+	  printf("Model for the generator %d\n",fData.model);
+
 }
 
 EdInput::~EdInput(){

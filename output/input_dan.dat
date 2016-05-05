@@ -1,31 +1,27 @@
-nevt:    100000;
-nprint:  10000;
+nevt:    10000;
+nprint:  1000;
 model:   2;
 M_mode:  1;
-ifile:	 energy.txt; 
+ifile:	 energy3.txt; 
 beam:    22;
-en:	 5.5    GeV;
+en:	 0.18    GeV;
 tg_Z:    1;
-tg_N:    0;
-tg_mass: 0.9383 GeV;
-length:	 40	cm;
+tg_N:    1;
+tg_mass: 37225.153165 MeV;
+length:	 1.0	cm;
 ras_x:	 0.2	cm;
 ras_y:	 0.2	cm;	
-offset:  0.0,0.0,0.0 cm;
-npart:   8;
-pid:     2212,335,310,310,211,-211,211,-211;
-theta_min: 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0 deg;
-theta_max: 180.0,180.0,180.0,180.0,180.0,180.0,180.0,180.0 deg;
-nvertex: 4;
+offset:  0.0,0.0,0.7 cm;
+npart:   4;
+pid:     111,800007,800006,22;
+theta_min: 0.0,0.0,0.0,0.0 deg;
+theta_max: 180.0,180.0,180.0,180.0,180.0 deg;
+nvertex: 2;
 vertex:  0,2;
 v_type:  1,1.0;
 vertex:  2,2;
 v_type:  1,1.0;
-vertex:  3,2;
-v_type:  1,1.0;
-vertex:  4,2;
-v_type:  1,1.0;
-output:  1;
+output:  4;
 END
 # Models
 # 1 Phase Space Single Energy (for example e-)
@@ -41,10 +37,14 @@ END
 # 2 Flat (Generated flat in mass in the allowed range)
 # 3 Just the mass at the center of the distribution
 # 4 Breit-Wigner2 (Mass and Width are automatically read from
-#   output/eg_pdg_table.txt) mass will still be	 generated fast also if outside the energy peak.
+#   output/eg_pdg_table.txt) mass will still be generated fast also if outside the energy peak.
 # 5 Gaussian and more to come
 #
 # output
 # 1  ROOT only
 # 2  ROOT + LUND
 # 3  ROOT + BOS
+# 4  ROOT + A2
+# Sn116: Target-Mass: 107961.738
+# Sn-120: Target-Mass: 111688.180
+# Sn-124: Target-Mass: 115417.416

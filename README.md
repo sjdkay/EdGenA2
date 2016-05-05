@@ -43,9 +43,14 @@ Input file
 * length:	 40	cm;		 LENGTH TARGET
 * ras_x:	 0.2	cm;		 BEAM PROFILE (GAUSSIAN SIGMA IN THE X DIRECTION)
 * ras_y:	 0.2	cm;		 BEAM PROFILE (GAUSSIAN SIGMA IN THE Y DIRECTION)
+* qffile: FermiDist.root hParis; #file containing quasi free momentum distribution (should be a TH1 in MeV)
+*  	  		 	 #second argument should be the name of the TH1 (hArgonne, hParis, hFlat)
+* qfpdg: 2112,2212;		 #pdg id of quasi free target and spectator (total target mass=tg_mass> qf target + spectator)
+*  	 			 #Note if nuclei larger than deuteron you will need to define a new spectator PDG in ed_pdg_table.txt 
 * b_s_cosx:0.001    cm;          BEAM PROFILE DIRECTION (GAUSSIAN SIGMA IN THE cosX DIRECTION)    
 * b_s_cosy:0.001    cm;          BEAM PROFILE DIRECTION (GAUSSIAN SIGMA IN THE cosY DIRECTION)      
-* theta:   1.57,3.14 rad;		 THETA CUT (AT NOW IS AN HARD CUT ON THE SIMULATED DATA->WILL REDUCE FINAL COUNT
+* theta_min:   2.5,4.0,5.0,4.0,5.0 deg;		 THETA CUT FOR SINGLE PARTICLE (FROM 'pid:' flag) (AT NOW IS AN HARD CUT ON THE SIMULATED DATA)
+* theta_max:   180.0,180.0,180.0,180.0,180.0 deg;		 THETA CUT FOR SINGLE PARTICLE (FROM 'pid:' flag) (AT NOW IS AN HARD CUT ON THE SIMULATED DATA)
 * offset:  0.12,0.14,1.1 cm;	 OFFSET TARGET (X,Y,Z)
 * npart:   5;	       		 NUMBER OF PARTICLE INVOLVED IN THE INTERACTION (EXCLUDING BEAM AND TARGET)
 * pid:     11,2212,113,211,-211;	 PARTICLE ID OF THE PARTICLE SPECIFIED WITH npart
@@ -62,9 +67,40 @@ Models
 * 1 Phase Space Single Energy (for example e-)
 * 2 Phase Space Energy Spectrum (for example gamma)
 * 3 Cross Section (sorry, not yet)
+* 4 Amplitudes (sorry, not yet) 
+* 5 Data Points (sorry, not yet)
+
+Mass Models
+-------
+(Mass model: if width of particle>1MeV, one can generate the mass according to different distributions)
+* 1 Breit-Wigner (Mass and Width are automatically read from output/eg_pdg_table.txt)
+* 2 Flat (Generated flat in mass in the allowed range)
+* 3 Just the mass at the center of the distribution
+* 4 Gaussian and more to come
 
 
 output
 -------
 * 1  ROOT only
-* 2  ROOT + A2 SIM format
+* 2  ROOT + LUND
+* 3  ROOT + BOS
+* 4  ROOT + A2
+Examples
+-------
+* 3 particles in a vertex, Dalitz plots are generate using the weight (for particles that decay with more than 2 particles in a vertex). The weight is an array of all the particles and describe the weight at creation (the weight is given to the decayed particles) <br />
+** Create generated output file: ./EdGenA2 -i input_test2.dat <br />
+** Analyze the output (with TProof) of the generated file (files analysis.C , analysis.h, run_analysis.C): root run_analysis.C <br />
+** NB The weight is given as a single number (the product of the weights at each vertex) in the BOS and LUND File: For the BOS file the weight is included in the MCHD bank (check that you bank is keeped in all the step of your analysis); For the LUND file format, the weight is included where should be the value of the mass in the LUND format (since it is not used by gemc). <br />
+* 2 particles per vertex, but 3 vertex <br />
+** Create generated output file: ./EdGenA2 -i input_test.dat <br />
+** Analyze the output (with TProof) of the generated file (files newAnalysis.C , newAnalysis.h, run_newAnalysis.C): root run_newAnalysis.C <br />
+* Photon production phasespace Omega + pi+ + pi- <br />
+** Create generated output file: ./EdGenA2 -i input_test_5.dat <br />
+** Analyze the output (with TProof) of the generated file (files analysis_5.C , analysis_5.h, run_analysis_5.C): root run_analysis_5.C <br />
+* Photon production phasespace a2->Omega + pi+ + pi- <br />
+** Create generated output file: ./EdGenA2 -i input_test_6.dat <br />
+** Analyze the output (with TProof) of the generated file (files analysis_6.C , analysis_6.h, run_analysis_6.C): root run_analysis_6.C <br />
+* For A2 examples see input_dan.dat and input_A2.dat
+** Create generated output file: ./EdGenA2 -i input_dan.dat <br />
+** Analyze the output (with TProof) of the generated file (files analysis_test.C , analysis_test.h, run_analysis_test.C): root run_analysis_test.C <br /> 
+* See other examples of input file with input.dat (default), etc.

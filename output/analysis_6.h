@@ -1,11 +1,11 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Dec  3 13:36:57 2014 by ROOT version 5.34/09
+// Wed Nov 11 12:14:26 2015 by ROOT version 5.34/21
 // from TChain T/
 //////////////////////////////////////////////////////////
 
-#ifndef analysis_h
-#define analysis_h
+#ifndef analysis_6_h
+#define analysis_6_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -18,55 +18,50 @@
 
 class   TH1F;
 class   TH2F;
+
 // Header file for the classes stored in the TTree if any.
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
-class analysis : public TSelector {
+class analysis_6 : public TSelector {
 public :
 
-  TH1F           *h1_phi;
-  TH1F           *h1_costheta;
-  TH1F           *h1_mass;
-  TH1F           *h1_mass_eta;
-  TH1F           *h1_mass2;
-  TH1F           *h1_costheta2;
-  TH1F           *h1_theta_pim;
-  TH1F           *h1_beam_sel;
-  TH1F           *h1_beam_sel2;
-  TH1F           *h1_mom_sel;
-  TH1F           *h1_mom_sel2;
-  TH1F           *h1_Ebeam;
+  TH1F           *h1_mass_omega;
+  TH1F           *h1_mass_a2;
+  TH1F           *h1_mass_omega_pi_pi;
+  TH2F           *h2_pimomega_pipomega;
+  TH1F           *h1_omega1;
+  TH1F           *h1_omega2;
+  TH1F           *h1_omega3;
+  TH1F           *h1_omega4;
 
-  TH2F           *h2_pimeta_pipeta;
-  TH2F           *h2_pimeta_pipeta2;
 
 
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
 
    // Declaration of leaf types
    Int_t           n_part;
-   Double_t        theta[5];   //[n_part]
-   Double_t        phi[5];   //[n_part]
+   Double_t        theta[8];   //[n_part]
+   Double_t        phi[8];   //[n_part]
    Double_t        x;
    Double_t        Ein_beam;
-   Double_t        Ef[5];   //[n_part]
+   Double_t        Ef[8];   //[n_part]
    Double_t        Q2;
    Double_t        nu;
    Double_t        W;
    Double_t        y;
    Int_t           Z_ion;
    Int_t           N_ion;
-   Int_t           particle_id[5];   //[n_part]
-   Int_t           charge[5];   //[n_part]
-   Double_t        pf[5];   //[n_part]
-   Double_t        px[5];   //[n_part]
-   Double_t        py[5];   //[n_part]
-   Double_t        pz[5];   //[n_part]
-   Double_t        vx[5];   //[n_part]
-   Double_t        vy[5];   //[n_part]
-   Double_t        vz[5];   //[n_part]
-   Double_t        weight[5]; //[n_part]
+   Int_t           particle_id[8];   //[n_part]
+   Int_t           charge[8];   //[n_part]
+   Double_t        pf[8];   //[n_part]
+   Double_t        px[8];   //[n_part]
+   Double_t        py[8];   //[n_part]
+   Double_t        pz[8];   //[n_part]
+   Double_t        vx[8];   //[n_part]
+   Double_t        vy[8];   //[n_part]
+   Double_t        vz[8];   //[n_part]
+   Double_t        weight[8];   //[n_part]
 
    // List of branches
    TBranch        *b_n_part;   //!
@@ -92,8 +87,8 @@ public :
    TBranch        *b_vz;   //!
    TBranch        *b_weight;   //!
 
-   analysis(TTree * /*tree*/ =0) : fChain(0) { }
-   virtual ~analysis() { }
+   analysis_6(TTree * /*tree*/ =0) : fChain(0) { }
+   virtual ~analysis_6() { }
    virtual Int_t   Version() const { return 2; }
    virtual void    Begin(TTree *tree);
    virtual void    SlaveBegin(TTree *tree);
@@ -108,13 +103,13 @@ public :
    virtual void    SlaveTerminate();
    virtual void    Terminate();
 
-   ClassDef(analysis,0);
+   ClassDef(analysis_6,0);
 };
 
 #endif
 
-#ifdef analysis_cxx
-void analysis::Init(TTree *tree)
+#ifdef analysis_6_cxx
+void analysis_6::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -153,7 +148,7 @@ void analysis::Init(TTree *tree)
    fChain->SetBranchAddress("weight", weight, &b_weight);
 }
 
-Bool_t analysis::Notify()
+Bool_t analysis_6::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -164,4 +159,4 @@ Bool_t analysis::Notify()
    return kTRUE;
 }
 
-#endif // #ifdef analysis_cxx
+#endif // #ifdef analysis_6_cxx
