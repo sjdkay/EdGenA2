@@ -1,0 +1,40 @@
+nevt:    10000000;
+nprint:  10000;
+model:   2;
+M_mode:  2;
+ifile:	 Bremsstrahlung_Spectra/BremSpec_100_1557.txt; 
+beam:    22;
+en:	 1.557    GeV;
+tg_Z:    0;
+tg_N:    1;
+tg_mass: 0.939565 GeV;
+length:	 10	cm;
+ras_x:	 2	cm;
+ras_y:	 2	cm;	
+b_s_cosx:0.001    cm;
+b_s_cosy:0.001    cm;
+theta:   0.0,3.14 rad;
+offset:  0.12,0.14,1.1 cm; 
+npart:   1;
+pid:     111;
+nvertex: 1;
+vertex:  0,2;
+v_type:  1,1.0;
+output:  2;
+END
+# Models
+# 1 Phase Space Single Energy (for example e-)
+# 2 Phase Space Energy Spectrum (for example gamma)
+# 3 Cross Section (sorry, not yet)
+# 4 Amplitudes (sorry, not yet) 
+# 5 Data Points (sorry, not yet)
+#
+# M_model (Mass model: if width of particle>1MeV, one can generate the mass according to different distributions)
+# 1 Breit-Wigner (Mass and Width are automatically read from  output/eg_pdg_table.txt)
+# 2 Flat (Generated flat in mass in the allowed range)
+# 3 Just the mass at the center of the distribution
+# 4 Gaussian and more to come
+#
+# output
+# 1  ROOT only
+# 2  ROOT + A2
